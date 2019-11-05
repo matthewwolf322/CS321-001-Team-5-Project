@@ -1,7 +1,9 @@
+import java.util.*;
+
 public class Permit
 {
-  String title; // the name of the Permit
-  String [] avaliableLots; //array of all lots avaliable 
+  private String title; // the name of the Permit
+  private String [] avaliableLots; //array of all lots avaliable 
   
   public Permit(String title, String [] avaliableLots)
   {
@@ -14,6 +16,10 @@ public class Permit
     return title;
   }
   
+  public String [] getLots()
+  {
+    return avaliableLots;
+  }
   
 }
   
