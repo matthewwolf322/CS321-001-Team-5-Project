@@ -1,4 +1,3 @@
-
 import java.util.*;
 import java.io.*;
 
@@ -10,7 +9,7 @@ public class PermitReader {
 	}
 	
 	// Main part of the program, reads in the file and creates permit objects
-	public Permit readFile(String permitName) {
+	public Permit[] readFile(String permitName) {
 		Scanner sc = null;
 		String temp = null;
 		try {
@@ -22,12 +21,15 @@ public class PermitReader {
 		}
 		
 		//using an arraylist to easily add each string of an arbitrary-length line
-		while(!sc.next().equals(permitName)) {
+		Permit permit;
+		ArrayList<Permit> permitList = new ArrayList<Permit>();
+		while(sc.hasNextLine()) {
 			temp = sc.nextLine();
+			permit = new Permit(permitName,temp.split(","));
+			permitList.add(permit);
 		}
-		Permit permit = new Permit(permitName,temp.split(","));
 		
-		return permit;
+		return (Permit[])permitList.toArray();
 		
 		
 		
