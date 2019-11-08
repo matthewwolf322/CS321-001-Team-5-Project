@@ -9,9 +9,10 @@ public class PermitReader {
 	}
 	
 	// Main part of the program, reads in the file and creates permit objects
-	public Permit[] readFile(String permitName) {
+	public Permit[] readFile() {
 		Scanner sc = null;
 		String temp = null;
+		String listTemp[], lotList[];
 		try {
 			sc = new Scanner(infile);
 		} catch (FileNotFoundException e) {
@@ -25,12 +26,22 @@ public class PermitReader {
 		ArrayList<Permit> permitList = new ArrayList<Permit>();
 		while(sc.hasNextLine()) {
 			temp = sc.nextLine();
-			permit = new Permit(permitName,temp.split(","));
+			listTemp = temp.split(",");
+			temp = listTemp[0];
+			lotList = new String[listTemp.length-1];
+			for(int i = 1; i < listTemp.length;i++) {
+				lotList[i-1] = listTemp[i];
+			}
+			permit = new Permit(temp,lotList);
 			permitList.add(permit);
 		}
 		
-		return (Permit[])permitList.toArray();
+		Permit[] permitArray = new Permit[permitList.size()];
+		for(int i = 0; i < permitArray.length;i++) {
+			permitArray[i] = permitList.get(i);
+		}
 		
+		return permitArray;
 		
 		
 	}
