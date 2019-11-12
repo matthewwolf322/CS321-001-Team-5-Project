@@ -33,16 +33,35 @@ public class DistanceFinder {
     // if a lot's distance is the lowest distance to the target building it's LotDistance object is added to the beginning of the list
     // otherwise its LotDistance object is added to the end of the list
     for (int i = 0; i < lots.length; i++) {
-      dist = findDistance (target, lots[i]);
-      if (i == 0) 
+      dist = findDistance(target, lots[i]); 
+      System.out.println("Distance from " + target + " to " + "Lot " + lots[i] + " is " + dist);
+      if (i == 0) {
         lowest_dist = dist;
+        System.out.println("Initial lowest_dist " + lowest_dist);
+      }
       if (dist <= lowest_dist) {
-        lowest_dist = dist;
-        sorted_ld.add(0, new LotDistance(lots[i].getName(), dist));
+        lowest_dist = dist; 
+        LotDistance ld = new LotDistance(lots[i].getName(), dist); 
+        sorted_ld.add(0,ld);
+        System.out.println("Added " + ld.toString() + " to head of sorted_ld ");
       }
-      else {
-        sorted_ld.add( new LotDistance(lots[i].getName(), dist));
+      else { 
+        LotDistance ld = new LotDistance(lots[i].getName(), dist);  
+        
+        boolean placed = false;
+        for (int j = 0; j < sorted_ld.size(); j++) {
+          if (dist <= sorted_ld.get(j).getDistance()) {
+            sorted_ld.add(j,ld);
+            placed = true;
+            break;
+          }
+        }
+        if (placed == false) {
+          sorted_ld.add(ld);
+        }
+        System.out.println("Added " + ld.toString() + " to end of sorted_ld ");
       }
+      System.out.println("Sorted_ld elements: " + sorted_ld);
     }
     
     // the ArrayList of LotDistance objects is converted to an array of LotDistance objects and returned 
@@ -68,7 +87,24 @@ public class DistanceFinder {
     double dist = Math.sqrt((Math.pow((t_x - l_x), 2)) + (Math.pow((t_y - l_y), 2))); 
     return dist;
     
-  } 
+  }  
+  
+  // main() does manual testing
+  //public static void main(String [] args) {
+    //Location [] lots_to_engnr = new Location[7]; 
+    //lots_to_engnr[0] = new Location("Lot K", new Coordinate(38.827987, -77.312649));
+    //lots_to_engnr[1] = new Location("Lot A", new Coordinate(38.826389, -77.307105));
+    //lots_to_engnr[2] = new Location("Lot M", new Coordinate(38.834085, -77.313695));
+    //lots_to_engnr[3] = new Location("Lot O", new Coordinate(38.834475, -77.313499));
+    //lots_to_engnr[4] = new Location("Lot P", new Coordinate(38.835085, -77.316257));
+    //lots_to_engnr[5] = new Location("Shenandoah", new Coordinate(38.82913, -77.30452));
+    //lots_to_engnr[6] = new Location("Mason Pond", new Coordinate(38.830631, -77.309557));
+    
+    //DistanceFinder df_engnr = new DistanceFinder(new Location("ENGNR", new Coordinate(38.827527,-77.305164)),lots_to_engnr);
+    //LotDistance [] ld_to_engnr = df_engnr.sortByDistance();
+  //}
+                                           
+                                           
 }
     
       
