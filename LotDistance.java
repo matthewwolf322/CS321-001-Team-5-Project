@@ -26,4 +26,18 @@ public class LotDistance {
   public double getDistance() {
     return distance;
   }
+  
+  // method prints LotDistance object in String format
+  public String toString() {
+    return "LotDistance: " + lot_name + " with distance " + distance + " from target building\n";
+  }
+
+  // added method for manual testing
+  //public static void main(String [] args) {
+  
+    //LotDistance lot_p = new LotDistance("Lot P", 3.145678334);
+    //System.out.println(lot_p.getName());
+    //System.out.println(lot_p.getDistance());
+    //System.out.println(lot_p.toString());
+  //}
 }
