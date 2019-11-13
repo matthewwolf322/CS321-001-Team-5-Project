@@ -9,6 +9,7 @@ import javax.swing.border.EmptyBorder;
 
 
 public class Display extends JFrame{
+
   
   //create main frame
   private JFrame mainFrame;
@@ -21,8 +22,6 @@ public class Display extends JFrame{
   private JFrame secondFrame;
   private JFrame thirdFrame;
   
-
-  
   //create panels for map and user input
   private JPanel userPanel;//holds input panel, goButtonPanel, buttonPanel, key_infoPanel 
   private JPanel mapPanel;//displays main map
@@ -30,12 +29,16 @@ public class Display extends JFrame{
   private JPanel goButtonPanel;
   private JPanel buttonPanel;//holds 1st/2nd/3rd lot buttons
   private JPanel key_infoPanel;//
-  
-  
+  private JPanel upperUserPanel; //Holds the message "Please Enter Permit and Building"
+  private JPanel centerUserPanel;
   //private JPanel first_map_Panel;
 
+  private JPanel firstButtonPanel;
+  private JPanel secondButtonPanel;
+  private JPanel thirdButtonPanel;
+  
 
-  //create panels for displaying specific lots
+  // create panels for displaying specific lots
   // 3 panels hold the three images (zoomed in map of lots) 
   // first_map_Panel holds map image of 1st closest lot
   // second_map_Panel holds map image of 2nd closest lot 
@@ -48,6 +51,7 @@ public class Display extends JFrame{
   //create user navigation buttons
   private JButton btn_findLot;
   private JButton btn_permitInfo;
+  private JButton btn_about;
   
 
   //Show ordered lots
@@ -56,12 +60,17 @@ public class Display extends JFrame{
   private JButton btn_thirdLot;
   
   //create labels
+  private JLabel lbl_title;
   private JLabel lbl_selectPermit;
-  private JLabel lbl_selectBuilding;
+  private JLabel lbl_selectLot;
+  
+  private JLabel lbl_firstLot;
+  private JLabel lbl_secondLot;
+  private JLabel lbl_thridLot;
   
   //create combo boxes
-  private JComboBox permitCombo;
-  private JComboBox buildingCombo;
+  private JComboBox<String> permitCombo;
+  private JComboBox<String> buildingCombo;
   
   //create text areas
   private JTextArea helpText;
@@ -71,8 +80,8 @@ public class Display extends JFrame{
   private String [] buildingList = new String [10];
   
 
-  boolean selected_permit;
-  boolean selected_building;
+  boolean selected_permit = false;
+  boolean selected_building = false;
   
   String inputted_permit;
   String inputted_building;
@@ -95,11 +104,6 @@ public class Display extends JFrame{
     createKeyInfoPanel();
     
     createUserPanel();
-    //createfirstFrame();
-
-    
-
-    
     
     mainFrame.add(userPanel,BorderLayout.EAST);
     mainFrame.add(helpText,BorderLayout.SOUTH);
@@ -108,109 +112,200 @@ public class Display extends JFrame{
   }
     
   public static void main (String[] args) throws IOException{
-    //JOptionPane.ShowMessageDialog(mainFrame, "Welcome to Smart Parking!", "Smart Parking");
     new Display();
-    
   }
-  
-  
+
   public void createMainFrame() throws IOException{
     mainFrame = new JFrame("Smart Parking");
     mainFrame.setSize(3000,2000);
-    //mainFrame.setBackground(new Color (0,103,0));
     mainFrame.setLocationRelativeTo(null);
     JFrame.setDefaultLookAndFeelDecorated(true);
     mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     
     mapPanel = new JPanel();
-    BufferedImage image = ImageIO.read(new File("assets/MapOfFairfaxCampus.png"));
-    //BufferedImage image = ImageIO.read(new File("C:/Users/howar/Desktop/GMU_Fall 2019/CS 321/Group Work/CS321-001-Team-5-Project-master/assets/mapOfFairfaxCampus.png"));
-    JLabel label = new JLabel(new ImageIcon(image));
-    //mapPanel.setLayout(new BoxLayout(mapPanel,BoxLayout.X_AXIS));
-    mapPanel.add(label);
-    mapPanel.setBorder(new EmptyBorder(new Insets(30, 20, 0, 20)));
-    //mapPanel.setBackground(new Color (0,103,0));
-    //mapPanel.setBorder(BorderFactory.createMatteBorder(
-                                    //1, 5, 1, 1, Color.red));
-    mainFrame.add(mapPanel);
     
+    //get map image
+    BufferedImage image = ImageIO.read(new File("assets/MapOfFairfaxCampus.png"));
+    JLabel label = new JLabel(new ImageIcon(image));
+    label.setBorder(BorderFactory.createRaisedBevelBorder());
+    
+    //add map to mapPanel
+    mapPanel.add(label);
+    mapPanel.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.BLACK));
+    
+    //add mapPanel to mainFrame
+    mainFrame.add(mapPanel);   
   }
   
   public void createUserPanel(){
     userPanel = new JPanel();
-    userPanel.setSize(3000,100);
-    userPanel.setLayout(new GridLayout(4,1));//four sections
-    userPanel.setBackground(Color.WHITE);
-    userPanel.add(inputPanel);
-    userPanel.add(goButtonPanel);
-    userPanel.add(buttonPanel);
+    userPanel.setPreferredSize(new Dimension(500,700));
+    userPanel.setLayout(new GridLayout(3,1));//four sections
+
+    upperUserPanel = new JPanel();
+    upperUserPanel.setPreferredSize(new Dimension(500,100));
+    upperUserPanel.setBorder(new EmptyBorder(new Insets(30, 0, 0, 15)));
+    upperUserPanel.setBackground(new Color (224,224,224));
+    
+    lbl_title = new JLabel("WELCOME TO SMART PARKING");
+    lbl_title.setForeground(Color.BLACK);
+    lbl_title.setFont(new Font("Bookman Old Style", Font.BOLD, 27));
+    lbl_title.setBorder(new EmptyBorder(new Insets(5, 0, 20, 5)));
+    
+    lbl_selectPermit = new JLabel("Please Enter Permit and Building");
+    lbl_selectPermit.setForeground(new Color (150,20,3));
+    lbl_selectPermit.setFont(new Font("Bookman Old Style", Font.BOLD, 25));
+    lbl_selectPermit.setBorder(new EmptyBorder(new Insets(5, 0, 20, 5)));
+    
+    upperUserPanel.add(lbl_title);
+    upperUserPanel.add(Box.createRigidArea(new Dimension(0,30)));
+    upperUserPanel.add(lbl_selectPermit);
+    upperUserPanel.add(Box.createRigidArea(new Dimension(0,10)));
+    upperUserPanel.add(inputPanel);
+    upperUserPanel.add(goButtonPanel);
+    upperUserPanel.setBorder(BorderFactory.createRaisedBevelBorder());
+    
+    userPanel.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.BLACK));
+    userPanel.add(upperUserPanel);
+    
+    userPanel.add(centerUserPanel);
+    //userPanel.add(Box.createRigidArea(new Dimension(0,20)));
     userPanel.add(key_infoPanel);
     
   }
   public String [] getPermitList(){
-    String [] permitList = {"A","B","C","I","J","RRPD", "K"};
+    String [] permitList = {"Select Permit Type", "A","B","C","I","J","RRPD", "K"};
     return permitList;
   }
   
   public void createInputPanel(){
     inputPanel = new JPanel();
-    inputPanel.setPreferredSize(new Dimension(80,80));
-    inputPanel.setAlignmentX(LEFT_ALIGNMENT);
-    BoxLayout boxLayout_Y = new BoxLayout(inputPanel,BoxLayout.PAGE_AXIS);
-    inputPanel.setLayout(boxLayout_Y);
-    inputPanel.setBorder(new EmptyBorder(new Insets(20, 20, 50, 10)));
-
-    //create combo boxes
-    //String [] permitList = {"A","B","C","I","J","RRPD", "K"};
-    String [] buildingList = {"Johnson Center", "Robinson B", "Innovation", "Center for the Arts", "Fennwick Library"};
-    
-    permitCombo = new JComboBox(getPermitList());
-    permitCombo.setFont(new Font("Arial", Font.PLAIN, 20));
-    buildingCombo = new JComboBox(buildingList);
-    buildingCombo.setFont(new Font("Arial", Font.PLAIN, 20));
-    lbl_selectPermit = new JLabel("Select Your Permit");
-    lbl_selectPermit.setFont(new Font("Arial", Font.BOLD, 20));
-    lbl_selectBuilding = new JLabel("Select Your Destination");
-    lbl_selectBuilding.setFont(new Font("Arial", Font.BOLD, 20));
-    lbl_selectPermit.setHorizontalTextPosition(JLabel.LEFT);
-    inputPanel.add(lbl_selectPermit);
-    //inputPanel.add(Box.createRigidArea(new Dimension(0,5)));
+    inputPanel.setPreferredSize(new Dimension (450,60));
+    inputPanel.setBackground(new Color (224,224,224));
     inputPanel.add(permitCombo);
-    inputPanel.add(Box.createRigidArea(new Dimension(0,30)));
-    inputPanel.add(lbl_selectBuilding);
-    inputPanel.add(Box.createRigidArea(new Dimension(0,5)));
+    inputPanel.add(Box.createRigidArea(new Dimension(11,0)));
     inputPanel.add(buildingCombo);
-    
     
   }
   
   
   public void createGoButtonPanel(){
     goButtonPanel = new JPanel();
-    goButtonPanel.setSize(5,5);
-    goButtonPanel.setLayout(new GridLayout(1,2));
-    goButtonPanel.setBorder(new EmptyBorder(new Insets(20, 20, 200, 5)));
-    goButtonPanel.add(Box.createRigidArea(new Dimension(20,0)));
+    goButtonPanel.setPreferredSize(new Dimension(445,50));
+    goButtonPanel.setAlignmentX(LEFT_ALIGNMENT);
+    BoxLayout boxLayout_X = new BoxLayout(goButtonPanel,BoxLayout.LINE_AXIS);
+    
+    goButtonPanel.add(Box.createRigidArea(new Dimension(295,50)));
     goButtonPanel.add(btn_findLot);
+    goButtonPanel.setBackground(new Color (224,224,224));
   }
   
   
   public void createButtonPanel(){
+    centerUserPanel = new JPanel();
+    centerUserPanel.setPreferredSize(new Dimension(500,200));
+    centerUserPanel.setBorder(BorderFactory.createLoweredBevelBorder());
+    centerUserPanel.setBackground(new Color (224,224,224));
+    
+    lbl_selectLot = new JLabel("Click To See Recommended Lots");
+    lbl_selectLot.setForeground(new Color (0,102,0));
+    lbl_selectLot.setFont(new Font("Bookman Old Style", Font.BOLD, 25));
+    
+    centerUserPanel.setBorder(new EmptyBorder(new Insets(30, 0, 0, 15)));
+    centerUserPanel.add(lbl_selectLot);
+    centerUserPanel.add(Box.createRigidArea(new Dimension(0,5)));
+    
+   
     buttonPanel = new JPanel();
-    //BoxLayout boxLayout_Y = new BoxLayout(buttonPanel,BoxLayout.Y_AXIS);
-    buttonPanel.setLayout(new GridLayout(6,1));
-    buttonPanel.setBorder(new EmptyBorder(new Insets(0, 20, 20, 20)));
-   // buttonPanel.add(btn_findLot);
+    buttonPanel.setPreferredSize(new Dimension(500,350));
+    buttonPanel.setBackground(new Color (224,224,224));
+    
+    createFirstLotButtonPanel();
+    createSecondLotButtonPanel();
+    createThirdLotButtonPanel();
+    buttonPanel.add(firstButtonPanel);
+    buttonPanel.add(secondButtonPanel);
+    buttonPanel.add(thirdButtonPanel);
+  
+    centerUserPanel.add(buttonPanel);
+  }
+  
+  public void createFirstLotButtonPanel(){
+    firstButtonPanel = new JPanel();
+    firstButtonPanel.setPreferredSize(new Dimension (450,60));
+    firstButtonPanel.setBackground(new Color (224,224,224));
+    
+    JLabel lbl_firstLot = new JLabel("Best Lot");
+    lbl_firstLot.setFont(new Font("Bookman Old Style", Font.BOLD, 25));
+    
+    
+    firstButtonPanel.add(lbl_firstLot);
+    //buttonPanel.add(Box.createRigidArea(new Dimension(200,100)));
+    lbl_firstLot.setPreferredSize(new Dimension(150,20));
+    btn_firstLot.setPreferredSize(new Dimension(250,50));
+    
+    firstButtonPanel.add(btn_firstLot);
+    
+  }
+  
+  public void createSecondLotButtonPanel(){
+    secondButtonPanel = new JPanel();
+    secondButtonPanel.setPreferredSize(new Dimension (450,60));
+    secondButtonPanel.setBackground(new Color (224,224,224));
+    
+    JLabel lbl_secondLot = new JLabel("Next Lot");
+    lbl_secondLot.setFont(new Font("Bookman Old Style", Font.BOLD, 25));
+    
+    
+    secondButtonPanel.add(lbl_secondLot);
+    //buttonPanel.add(Box.createRigidArea(new Dimension(200,100)));
+    lbl_secondLot.setPreferredSize(new Dimension(150,20));
+    btn_secondLot.setPreferredSize(new Dimension(250,50));
+    
+    secondButtonPanel.add(btn_secondLot);
+
+  }
+  
+  public void createThirdLotButtonPanel(){
+    thirdButtonPanel = new JPanel();
+    thirdButtonPanel.setPreferredSize(new Dimension (450,60));
+    thirdButtonPanel.setBackground(new Color (224,224,224));
+    
+    JLabel lbl_thirdLot = new JLabel("Next Lot");
+    lbl_thirdLot.setFont(new Font("Bookman Old Style", Font.BOLD, 25));
+    
+    
+    thirdButtonPanel.add(lbl_thirdLot);
+    //buttonPanel.add(Box.createRigidArea(new Dimension(200,100)));
+    lbl_thirdLot.setPreferredSize(new Dimension(150,20));
+    btn_thirdLot.setPreferredSize(new Dimension(250,50));
+    
+    thirdButtonPanel.add(btn_thirdLot);
   }
   
   public void createKeyInfoPanel(){
     key_infoPanel = new JPanel();
-    BoxLayout boxLayout_X = new BoxLayout(key_infoPanel,BoxLayout.X_AXIS);
-    key_infoPanel.setLayout(boxLayout_X);
-    //
-    
-    key_infoPanel.add(Box.createRigidArea(new Dimension(5,0)));
+    key_infoPanel.setPreferredSize(new Dimension(100,5));
+    key_infoPanel.setLayout(new GridLayout(4,3));
+    key_infoPanel.setBackground(new Color (224,224,224));
+
+    key_infoPanel.setBorder(new EmptyBorder(new Insets(50, 20, 20, 50)));
+    key_infoPanel.add(Box.createRigidArea(new Dimension(20,0)));
+    key_infoPanel.add(Box.createRigidArea(new Dimension(20,0)));
+    key_infoPanel.add(Box.createRigidArea(new Dimension(20,0)));
+    key_infoPanel.add(Box.createRigidArea(new Dimension(20,0)));
+    key_infoPanel.add(Box.createRigidArea(new Dimension(20,0)));
+    key_infoPanel.add(Box.createRigidArea(new Dimension(20,0)));
+    key_infoPanel.add(Box.createRigidArea(new Dimension(20,0)));
+    key_infoPanel.add(Box.createRigidArea(new Dimension(20,0)));
+    key_infoPanel.add(Box.createRigidArea(new Dimension(20,0)));
     key_infoPanel.add(btn_permitInfo);
+    btn_permitInfo.setBorder(new EmptyBorder(new Insets(5, 5, 5, 5)));
+    key_infoPanel.add(Box.createRigidArea(new Dimension(20,0)));
+    key_infoPanel.add(btn_about);
+    btn_about.setBorder(new EmptyBorder(new Insets(5, 5,5, 5)));
+    //key_infoPanel.setBorder(BorderFactory.createMatteBorder(
+                                   //1, 5, 1, 1, Color.red));
     
   }
   
@@ -302,7 +397,7 @@ public class Display extends JFrame{
      JPanel findPermitPanel = new JPanel();
      
      JLabel lbl_permitSelect = new JLabel("Select Permit Type");
-     JComboBox permitSelectCombo = new JComboBox(getPermitList());
+     JComboBox permitSelectCombo = new JComboBox<String>(getPermitList());
      permitSelectCombo.setFont(new Font("Arial", Font.BOLD, 30));
      permitSelectCombo.addActionListener(permitSelectCombo);
      
@@ -319,50 +414,80 @@ public class Display extends JFrame{
     
   }
   
+  
+  
+  
+  
   public void createCombos(){
     //create combo boxes
-    //String permitList[] = {"A","B","C","I","J","RRPD", "K"};
-    String buildingList[] = {"Johnson Center", "Robinson B", "Innovation", "Center for the Arts", "Fennwick Library"};
+    String buildingList[] = {"Select Building" ,"Johnson Center", "Robinson B", "Innovation", "Center for the Arts", "Fennwick Library"};
     
     // commented lines: stores selected permit and building values 
     // selected_permit and selected_building used to check if the user selected both the permit and the building 
-    permitCombo = new JComboBox(getPermitList()); //change blf.getPermitList()
-    permitCombo.addActionListener(new ActionListener(){
+    permitCombo = new JComboBox<String>(getPermitList());
+    permitCombo.setFont(new Font("Arial", Font.BOLD, 20));
+    permitCombo.setSelectedIndex(0);
+    
+    permitCombo.addActionListener(
+      new ActionListener(){
       @Override
-      public void actionPerformed(ActionEvent arg0){
-        selected_permit = true;
-        inputted_permit = (String) permitCombo.getSelectedItem();
-        helpText.append(inputted_permit);
+          public void actionPerformed(ActionEvent e){
+            JComboBox<String> this_combo = (JComboBox<String>)e.getSource();
+
+            String command = e.getActionCommand();
+            if ("comboBoxChanged".equals(command)) {
+                    inputted_permit = (String) permitCombo.getSelectedItem();
+                    if(inputted_permit.equals("Select Permit")){
+                      selected_permit = false;
+                    }
+                    else{
+                      selected_permit = true;
+                    }
+            }
+      }
+      
+    });
+    buildingCombo = new JComboBox<String>(buildingList);
+    buildingCombo.setFont(new Font("Arial", Font.BOLD, 20));
+    buildingCombo.setSelectedIndex(0);
+    buildingCombo.addActionListener(
+      new ActionListener(){
+      @Override
+          public void actionPerformed(ActionEvent e){
+            JComboBox<String> this_combo = (JComboBox<String>)e.getSource();
+
+            String command = e.getActionCommand();
+            if ("comboBoxChanged".equals(command)) {
+                    inputted_building = (String) buildingCombo.getSelectedItem();
+                    if(inputted_building.equals("Select Building")){
+                      selected_building = false;
+                    }
+                    else{
+                      selected_building = true;
+                    }
+            }
       }
       
     });
     
-    buildingCombo = new JComboBox(buildingList); //change to blf.getBuildingList()
-    buildingCombo.addActionListener(new ActionListener(){
-      @Override
-      public void actionPerformed(ActionEvent arg0){
-        selected_building = true;
-        inputted_building = (String) buildingCombo.getSelectedItem();
-        helpText.append(inputted_building);
-      }
-      
-    });
+    
     
   }
-  
   public void createButtons(){
     //create buttons
     helpText = new JTextArea();
     btn_findLot = new JButton("Find Lot");
-    btn_findLot.setFont(new Font("Arial", Font.BOLD, 30));
+    //btn_findLot.setBackground( new Color(100,0,0));
+    btn_findLot.setFont(new Font("Arial", Font.BOLD, 25));
     btn_findLot.addActionListener(new ActionListener(){
       @Override
       public void actionPerformed(ActionEvent arg0){
+
         helpText.append("Finding Best Lot ...\n");
         
         // way to call backend?
 
-        // if (selected_building == true && selected_permit == true) {
+        if (selected_building == true && selected_permit == true) {
         //     blf.setPermit(inputted_permit);
         //     blf.setBuilding(inputted_building);
         //     blf.findBestLot();
@@ -383,16 +508,27 @@ public class Display extends JFrame{
         //     if (ld.length >= 1) {
         //        createfirstFrame();
         //      }
-
-        buttonPanel.add(btn_firstLot);
-        buttonPanel.add(btn_secondLot);
-        buttonPanel.add(btn_thirdLot);
-        mainFrame.pack();
+          
+          mainFrame.pack();
+        }
+        else if (selected_building == false && selected_permit == true){
+          int answer = JOptionPane.showConfirmDialog(mainFrame, "No Building Selected. Continue with 'Johnson Center' as Building?", "Caution" ,JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+          if (answer == JOptionPane.YES_OPTION){
+            helpText.append("Using JC");
+          }
+          //else --> do nothing
+          
+        }
+        else{
+         JOptionPane.showMessageDialog(mainFrame, "Please Select a Permit and Building to Continue");
+        }
       }
       
     });
     
     btn_permitInfo = new JButton("Permit Info");
+    btn_permitInfo.setFont(new Font("Arial", Font.BOLD, 22));
+    //btn_permitInfo.setBackground(new Color(225,204,51));
     btn_permitInfo.addActionListener(new ActionListener(){
       @Override
       public void actionPerformed(ActionEvent arg0){
@@ -403,20 +539,27 @@ public class Display extends JFrame{
       
     });
     
-    //btn_mapKey = new JButton("Map Key");
-    //btn_mapKey.addActionListener(new ActionListener(){
-     // @Override
-      //public void actionPerformed(ActionEvent arg0){
-       // helpText.append("Displaying Map Key...\n");
-       // mainFrame.pack();
-     // }
-    // 
-    //});
+    btn_about = new JButton("About");
+    btn_about.setFont(new Font("Arial", Font.BOLD, 22));
+    //btn_about.setBackground(new Color(225,204,51));
+    btn_about.addActionListener(new ActionListener(){
+      @Override
+      public void actionPerformed(ActionEvent arg0){
+        helpText.append("Displaying About Info ...\n");
+        createPermitInfoFrames();
+        mainFrame.pack();
+      }
+      
+    });
     
     btn_firstLot = new JButton("#1 Lot");
     btn_firstLot.setBorder(BorderFactory.createBevelBorder(0));
-    btn_firstLot.setFont(new Font("Arial", Font.BOLD, 30));
-    btn_firstLot.setBackground(Color.GREEN);
+    btn_firstLot.setFont(new Font("Arial", Font.BOLD, 35));
+    //btn_firstLot.setBackground(new Color (0,182,0,155));
+    btn_firstLot.setForeground(Color.BLACK);
+    btn_firstLot.setBorder(BorderFactory.createRaisedBevelBorder());
+    //btn_firstLot.setBackground(Color.GREEN);
+    btn_firstLot.setEnabled(false);
     btn_firstLot.addActionListener(new ActionListener(){
       @Override
       public void actionPerformed(ActionEvent arg0){
@@ -426,9 +569,10 @@ public class Display extends JFrame{
     });
     
     btn_secondLot = new JButton("#2 Lot");
-    btn_secondLot.setBackground(Color.YELLOW);
-    btn_secondLot.setFont(new Font("Arial", Font.BOLD, 30));
+    //btn_secondLot.setBackground(Color.YELLOW);
+    btn_secondLot.setFont(new Font("Arial", Font.BOLD, 35));
     btn_secondLot.setBorder(BorderFactory.createBevelBorder(0));
+    btn_secondLot.setEnabled(false);
     btn_secondLot.addActionListener(new ActionListener(){
       @Override
       public void actionPerformed(ActionEvent arg0){
@@ -438,9 +582,10 @@ public class Display extends JFrame{
     });
     
     btn_thirdLot = new JButton("#3 Lot");
-    btn_thirdLot.setBackground(Color.RED);
-    btn_thirdLot.setFont(new Font("Arial", Font.BOLD, 30));
+    //btn_thirdLot.setBackground(Color.RED);
+    btn_thirdLot.setFont(new Font("Arial", Font.BOLD, 35));
     btn_thirdLot.setBorder(BorderFactory.createBevelBorder(0));
+    btn_thirdLot.setEnabled(false);
     btn_thirdLot.addActionListener(new ActionListener(){
       @Override
       public void actionPerformed(ActionEvent arg0){
