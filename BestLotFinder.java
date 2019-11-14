@@ -17,7 +17,7 @@ public class BestLotFinder {
 	}
 	//main workhorse of this class, returns sorted list of lot distances for use by display
 	public LotDistance[] findBestLot() {
-		
+		return null;
 	}
 	//this should be called by the display class before use
 	//we may want an assocaited boolean that doesn't allow use of the class until load has been called
