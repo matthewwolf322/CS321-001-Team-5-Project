@@ -486,7 +486,7 @@ public class Display extends JFrame{
 
   public void createCombos(){
     //create combo boxes
-    String buildingList[] = {"Select Building" ,"Johnson Center", "Robinson B", "Innovation", "Center for the Arts", "Fennwick Library"};
+    //String buildingList[] = {"Select Building" ,"Johnson Center", "Robinson B", "Innovation", "Center for the Arts", "Fennwick Library"};
     
     // commented lines: stores selected permit and building values 
     // selected_permit and selected_building used to check if the user selected both the permit and the building 
