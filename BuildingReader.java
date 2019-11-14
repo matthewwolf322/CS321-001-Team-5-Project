@@ -17,7 +17,7 @@ public class BuildingReader {
 			sc = new Scanner(infile);
 		} catch (FileNotFoundException e) {
 			//Exit if file is not found
-			System.out.println("Error loading file " + inFile);
+			System.out.println("Error loading file " + infile);
 			System.exit(0);
 		}
 		
