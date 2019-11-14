@@ -34,7 +34,7 @@ public class Permit{
     //list[2] = "C";
     //Permit A = new Permit("Permit 1",list);
     //System.out.print(A.toString());
-  }
+  //}
 }
   
   
