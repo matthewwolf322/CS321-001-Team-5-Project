@@ -4,7 +4,7 @@
  * because yall are checking to make sure thats being done in the display class. 
  * 
  * If there are any issues with it, please message me cause its more than likely that I
- * messed up
+ * 
  */
 public class BestLotFinder {
 	// Some variables need to be established, not entirely sure how many
@@ -24,7 +24,7 @@ public class BestLotFinder {
 	private void load() {
 		BuildingReader buildingReader = new BuildingReader("assets/buildings.csv");
 		BuildingReader lotReader = new BuildingReader("assets/lots.csv");
-		PermitReader permitReader = new PermitReader("assetes/permits.csv");
+		PermitReader permitReader = new PermitReader("assets/permits.csv");
 		permitList = permitReader.readFile();
 		buildingList = buildingReader.readFile();
 		masterLotList = lotReader.readFile();
