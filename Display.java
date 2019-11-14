@@ -12,8 +12,7 @@ public class Display extends JFrame{
 
   
   //create main frame
-  private JFrame mainFrame;
-  private JFrame expandedMapFrame;//to dispay close up images of the map
+  private JFrame mainFrame;//master frame for program interface
   private JFrame findPermitFrame;//to get permit name
   private JFrame permitInfoFrame;//to display 
   
@@ -23,16 +22,18 @@ public class Display extends JFrame{
   private JFrame thirdFrame;
   
   //create panels for map and user input
-  private JPanel userPanel;//holds input panel, goButtonPanel, buttonPanel, key_infoPanel 
+  private JPanel userPanel;//holds upperUserPanel, centerUserPanel and key_infoPanel 
   private JPanel mapPanel;//displays main map
-  private JPanel inputPanel;//
-  private JPanel goButtonPanel;
+  
+  //smaller panels to hold objects
+  private JPanel inputPanel;//holds combo boxes
+  private JPanel goButtonPanel;//holds "Find Lot" Button
   private JPanel buttonPanel;//holds 1st/2nd/3rd lot buttons
-  private JPanel key_infoPanel;//
-  private JPanel upperUserPanel; //Holds the message "Please Enter Permit and Building"
-  private JPanel centerUserPanel;
-  //private JPanel first_map_Panel;
+  private JPanel key_infoPanel;// hold about button and permit info button
+  private JPanel upperUserPanel; //Holds the inputPanel and title
+  private JPanel centerUserPanel; //holds buttonPanel and title
 
+  //each panel holds a label and button for displaying specific lots
   private JPanel firstButtonPanel;
   private JPanel secondButtonPanel;
   private JPanel thirdButtonPanel;
@@ -59,14 +60,19 @@ public class Display extends JFrame{
   private JButton btn_secondLot;
   private JButton btn_thirdLot;
   
-  //create labels
-  private JLabel lbl_title;
-  private JLabel lbl_selectPermit;
-  private JLabel lbl_selectLot;
+  //general labels
+  private JLabel lbl_title;//title for userPanel
+  private JLabel lbl_selectPermit;//title for inputPanel
+  private JLabel lbl_selectLot; //title for buttonPanel
   
+  //lables for lots
   private JLabel lbl_firstLot;
   private JLabel lbl_secondLot;
   private JLabel lbl_thridLot;
+  
+  private JLabel lbl_permit_title;
+  private JLabel lbl_permit_selectPermit;
+  
   
   //create combo boxes
   private JComboBox<String> permitCombo;
@@ -76,8 +82,8 @@ public class Display extends JFrame{
   private JTextArea helpText;
   
   
-  private String [] permitList = new String [10];
-  private String [] buildingList = new String [10];
+  private String [] permitList;
+  private String [] buildingList;
   
 
   boolean selected_permit = false;
@@ -86,23 +92,26 @@ public class Display extends JFrame{
   String inputted_permit;
   String inputted_building;
   
-  //BestLotFinder blf;
+  BestLotFinder blf;
   
-
+  //for displaying the intro message
+  Timer timer; 
+  int delay = 0;
+  
   public Display() throws IOException{
 
-    //blf = new BestLotFinder(); //call best lot finder
+    blf = new BestLotFinder(); //call best lot finder
+    permitList = blf.getPermitList();
+    buildingList = blf.getBuildingList();
+    
+    initTimer(); //set timer to show intro message and then display mainframe
     
     createMainFrame();
     createCombos();
     createButtons();
-
-    createInputPanel();
-    createGoButtonPanel();
-    
-    createButtonPanel();
+    createUpperUserPanel();//create panel to hold the top set of userPanel components
+    createCenterUserPanel();
     createKeyInfoPanel();
-    
     createUserPanel();
     
     mainFrame.add(userPanel,BorderLayout.EAST);
@@ -110,9 +119,28 @@ public class Display extends JFrame{
     mainFrame.pack();//conform frame to size of components
     mainFrame.setVisible(true);//set visible after elements are added
   }
-    
+  
   public static void main (String[] args) throws IOException{
-    new Display();
+    introMessage titleScreen = new introMessage();
+    titleScreen.run();
+  }
+  /*
+   * initTimer runs a timer to allow the intro screen to play before opening the main gui
+   * 
+   */ 
+  public void initTimer(){
+    timer = new Timer(12000, new ActionListener(){
+    public void actionPerformed(ActionEvent evt){
+      if (delay < 11){
+        delay++;
+      }
+      else{
+        timer.stop();
+      }
+    }
+    
+ });
+    timer.start();
   }
 
   public void createMainFrame() throws IOException{
@@ -125,7 +153,8 @@ public class Display extends JFrame{
     mapPanel = new JPanel();
     
     //get map image
-    BufferedImage image = ImageIO.read(new File("assets/MapOfFairfaxCampus.png"));
+    BufferedImage image = ImageIO.read(new File("assets/mapOfFairfaxCampus-ACLJKGlobal-r.png"));
+    //BufferedImage image = ImageIO.read(new File("assets/MapOfFairfaxCampus.png"));
     JLabel label = new JLabel(new ImageIcon(image));
     label.setBorder(BorderFactory.createRaisedBevelBorder());
     
@@ -141,7 +170,16 @@ public class Display extends JFrame{
     userPanel = new JPanel();
     userPanel.setPreferredSize(new Dimension(500,700));
     userPanel.setLayout(new GridLayout(3,1));//four sections
-
+    userPanel.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.BLACK));
+    userPanel.add(upperUserPanel);
+    userPanel.add(centerUserPanel);
+    userPanel.add(key_infoPanel); 
+  }
+  
+  public void createUpperUserPanel(){
+    createInputPanel();
+    createGoButtonPanel();
+    
     upperUserPanel = new JPanel();
     upperUserPanel.setPreferredSize(new Dimension(500,100));
     upperUserPanel.setBorder(new EmptyBorder(new Insets(30, 0, 0, 15)));
@@ -164,15 +202,9 @@ public class Display extends JFrame{
     upperUserPanel.add(inputPanel);
     upperUserPanel.add(goButtonPanel);
     upperUserPanel.setBorder(BorderFactory.createRaisedBevelBorder());
-    
-    userPanel.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.BLACK));
-    userPanel.add(upperUserPanel);
-    
-    userPanel.add(centerUserPanel);
-    //userPanel.add(Box.createRigidArea(new Dimension(0,20)));
-    userPanel.add(key_infoPanel);
-    
+     
   }
+  
   public String [] getPermitList(){
     String [] permitList = {"Select Permit Type", "A","B","C","I","J","RRPD", "K"};
     return permitList;
@@ -185,7 +217,6 @@ public class Display extends JFrame{
     inputPanel.add(permitCombo);
     inputPanel.add(Box.createRigidArea(new Dimension(11,0)));
     inputPanel.add(buildingCombo);
-    
   }
   
   
@@ -194,14 +225,26 @@ public class Display extends JFrame{
     goButtonPanel.setPreferredSize(new Dimension(445,50));
     goButtonPanel.setAlignmentX(LEFT_ALIGNMENT);
     BoxLayout boxLayout_X = new BoxLayout(goButtonPanel,BoxLayout.LINE_AXIS);
-    
     goButtonPanel.add(Box.createRigidArea(new Dimension(295,50)));
     goButtonPanel.add(btn_findLot);
     goButtonPanel.setBackground(new Color (224,224,224));
   }
   
-  
   public void createButtonPanel(){
+    buttonPanel = new JPanel();
+    buttonPanel.setPreferredSize(new Dimension(500,350));
+    buttonPanel.setBackground(new Color (224,224,224));
+    
+    createFirstLotButtonPanel();
+    createSecondLotButtonPanel();
+    createThirdLotButtonPanel();
+    
+    buttonPanel.add(firstButtonPanel);
+    buttonPanel.add(secondButtonPanel);
+    buttonPanel.add(thirdButtonPanel);
+  }
+  
+  public void createCenterUserPanel(){
     centerUserPanel = new JPanel();
     centerUserPanel.setPreferredSize(new Dimension(500,200));
     centerUserPanel.setBorder(BorderFactory.createLoweredBevelBorder());
@@ -215,17 +258,7 @@ public class Display extends JFrame{
     centerUserPanel.add(lbl_selectLot);
     centerUserPanel.add(Box.createRigidArea(new Dimension(0,5)));
     
-   
-    buttonPanel = new JPanel();
-    buttonPanel.setPreferredSize(new Dimension(500,350));
-    buttonPanel.setBackground(new Color (224,224,224));
-    
-    createFirstLotButtonPanel();
-    createSecondLotButtonPanel();
-    createThirdLotButtonPanel();
-    buttonPanel.add(firstButtonPanel);
-    buttonPanel.add(secondButtonPanel);
-    buttonPanel.add(thirdButtonPanel);
+    createButtonPanel();
   
     centerUserPanel.add(buttonPanel);
   }
@@ -240,7 +273,6 @@ public class Display extends JFrame{
     
     
     firstButtonPanel.add(lbl_firstLot);
-    //buttonPanel.add(Box.createRigidArea(new Dimension(200,100)));
     lbl_firstLot.setPreferredSize(new Dimension(150,20));
     btn_firstLot.setPreferredSize(new Dimension(250,50));
     
@@ -258,7 +290,6 @@ public class Display extends JFrame{
     
     
     secondButtonPanel.add(lbl_secondLot);
-    //buttonPanel.add(Box.createRigidArea(new Dimension(200,100)));
     lbl_secondLot.setPreferredSize(new Dimension(150,20));
     btn_secondLot.setPreferredSize(new Dimension(250,50));
     
@@ -276,7 +307,6 @@ public class Display extends JFrame{
     
     
     thirdButtonPanel.add(lbl_thirdLot);
-    //buttonPanel.add(Box.createRigidArea(new Dimension(200,100)));
     lbl_thirdLot.setPreferredSize(new Dimension(150,20));
     btn_thirdLot.setPreferredSize(new Dimension(250,50));
     
@@ -309,7 +339,7 @@ public class Display extends JFrame{
     
   }
   
-  public void createfirstFrame(LotDistance [] ld) throws IOException{
+  public void createFirstFrame(LotDistance [] ld) throws IOException{
     firstFrame = new JFrame("firstframe");
     firstFrame.setSize(3000,3000);
     firstFrame.setLocationRelativeTo(null);
@@ -318,7 +348,7 @@ public class Display extends JFrame{
     String first_lot_name = ld[0].getName();
     
     first_map_Panel = new JPanel();
-    BufferedImage image2 = ImageIO.read(new File(getImage(first_lot_name)));
+    BufferedImage image2 = ImageIO.read(new File(getLotImage(first_lot_name)));
     JLabel label2 = new JLabel(new ImageIcon(image2));
     first_map_Panel.add(label2);
     firstFrame.add(first_map_Panel);
@@ -326,7 +356,7 @@ public class Display extends JFrame{
     
   } 
 
-  public void createsecondFrame(LotDistance [] ld) throws IOException{
+  public void createSecondFrame(LotDistance [] ld) throws IOException{
     secondFrame = new JFrame("secondframe");
     secondFrame.setSize(3000,3000);
     secondFrame.setLocationRelativeTo(null);
@@ -335,7 +365,7 @@ public class Display extends JFrame{
     String sec_lot_name = ld[1].getName();
     
     second_map_Panel = new JPanel();
-    BufferedImage image3 = ImageIO.read(new File(getImage(sec_lot_name)));
+    BufferedImage image3 = ImageIO.read(new File(getLotImage(sec_lot_name)));
     JLabel label3 = new JLabel(new ImageIcon(image3));
     second_map_Panel.add(label3);
     secondFrame.add(second_map_Panel);
@@ -343,7 +373,7 @@ public class Display extends JFrame{
     
   }
   
-  public void createthirdFrame(LotDistance [] ld) throws IOException{
+  public void createThirdFrame(LotDistance [] ld) throws IOException{
     thirdFrame = new JFrame("thirdframe");
     thirdFrame.setSize(3000,3000);
     thirdFrame.setLocationRelativeTo(null);
@@ -352,7 +382,7 @@ public class Display extends JFrame{
     String third_lot_name = ld[2].getName();
     
     third_map_Panel = new JPanel();
-    BufferedImage image4 = ImageIO.read(new File(getImage(third_lot_name)));
+    BufferedImage image4 = ImageIO.read(new File(getLotImage(third_lot_name)));
     JLabel label4 = new JLabel(new ImageIcon(image4));
     third_map_Panel.add(label4);
     thirdFrame.add(third_map_Panel);
@@ -361,7 +391,7 @@ public class Display extends JFrame{
   }
 
   // Helper Method: returns the path name of image containing the lot lot_dist_name
-  public String getImage(String lot_dist_name) {
+  public String getLotImage(String lot_dist_name) {
     if (lot_dist_name.equals("A") || lot_dist_name.equals("C") ||
         lot_dist_name.equals("L") || lot_dist_name.equals("J") ||
         lot_dist_name.equals("K") || lot_dist_name.equals("Global")) {
@@ -391,10 +421,34 @@ public class Display extends JFrame{
   public void createPermitInfoFrames(){
      JFrame findPermitFrame = new JFrame("Select Permit");//to get permit name
      JFrame permitInfoFrame = new JFrame("Display Permit Information");//to display 
-     findPermitFrame.setSize(500,200);
      findPermitFrame.setLocationRelativeTo(null);
      findPermitFrame.setResizable(false);
      JPanel findPermitPanel = new JPanel();
+     
+     findPermitPanel.setPreferredSize(new Dimension(500,100));
+     findPermitPanel.setBorder(new EmptyBorder(new Insets(30, 0, 0, 15)));
+     findPermitPanel.setBackground(new Color (224,224,224));
+    
+     lbl_permit_title = new JLabel("Find Your Permit Information");
+     lbl_permit_title.setForeground(Color.BLACK);
+     lbl_permit_title.setFont(new Font("Bookman Old Style", Font.BOLD, 27));
+     lbl_permit_title.setBorder(new EmptyBorder(new Insets(5, 0, 20, 5)));
+    
+     lbl_permit_selectPermit = new JLabel("Please Enter Permit");
+     lbl_permit_selectPermit.setForeground(new Color (150,20,3));
+     lbl_permit_selectPermit.setFont(new Font("Bookman Old Style", Font.BOLD, 25));
+     lbl_permit_selectPermit.setBorder(new EmptyBorder(new Insets(5, 0, 20, 5)));
+    
+     findPermitPanel.add(lbl_permit_title);
+     findPermitPanel.add(Box.createRigidArea(new Dimension(0,30)));
+     findPermitPanel.add(lbl_selectPermit);
+     findPermitPanel.add(Box.createRigidArea(new Dimension(0,10)));
+     findPermitPanel.add(inputPanel);
+     findPermitPanel.add(goButtonPanel);
+     findPermitPanel.setBorder(BorderFactory.createRaisedBevelBorder());
+     
+     
+     
      
      JLabel lbl_permitSelect = new JLabel("Select Permit Type");
      JComboBox permitSelectCombo = new JComboBox<String>(getPermitList());
@@ -408,23 +462,35 @@ public class Display extends JFrame{
      
   }
   
-  public void findPermitInfo(){
+  public String getPermitImage(String permitName){
+    if (permitName.equals("West Campus") || permitName.equals("Lot M & P") ||
+        permitName.equals("General") || permitName.equals("Resident Student Annual Lite")){
+      return "/assets/studentSurfaceLotWestPermits.png";
+    }
     
+    else if(permitName.equals("Mason Pond (Student Annual)") || permitName.equals("Shenandoah Deck (Reserved Student)") ||
+            permitName.equals("Rappahannock River Parking Deck")){
+      return "/assets/studentDeckPermits.png";
+    } 
     
-    
+    else if(permitName.equals("Lot J") || permitName.equals("Lot I")|| permitName.equals("Rot I")) {
+      return "/assets/studentSurfaceLotSpecialPermits.png";
+    }
+    else if (permitName.equals("General Faculty/Staff Annual") || permitName.equals("Mason Pond F/S Annual") ||
+        permitName.equals("Shenandoah F/S Annual") || permitName.equals("RRPD F/S Annual")|| permitName.equals("RRPD Roof Only F/S")){
+      return "/assets/facultyDeckPermits.png";
+    }
+    return null; 
   }
   
-  
-  
-  
-  
+
   public void createCombos(){
     //create combo boxes
     String buildingList[] = {"Select Building" ,"Johnson Center", "Robinson B", "Innovation", "Center for the Arts", "Fennwick Library"};
     
     // commented lines: stores selected permit and building values 
     // selected_permit and selected_building used to check if the user selected both the permit and the building 
-    permitCombo = new JComboBox<String>(getPermitList());
+    permitCombo = new JComboBox<String>(permitList);
     permitCombo.setFont(new Font("Arial", Font.BOLD, 20));
     permitCombo.setSelectedIndex(0);
     
@@ -437,7 +503,7 @@ public class Display extends JFrame{
             String command = e.getActionCommand();
             if ("comboBoxChanged".equals(command)) {
                     inputted_permit = (String) permitCombo.getSelectedItem();
-                    if(inputted_permit.equals("Select Permit")){
+                    if(inputted_permit.equals("Select Permit Type")){
                       selected_permit = false;
                     }
                     else{
@@ -488,8 +554,8 @@ public class Display extends JFrame{
         // way to call backend?
 
         if (selected_building == true && selected_permit == true) {
-        //     blf.setPermit(inputted_permit);
-        //     blf.setBuilding(inputted_building);
+            //blf.setPermit(inputted_permit);
+           // blf.setBuilding(inputted_building);
         //     blf.findBestLot();
         //     Permit chosen_permit = new Permit(inputted_permit,  );
         //     Location [] lots = chosen_permit.getLots();
@@ -497,16 +563,16 @@ public class Display extends JFrame{
         //     LotDistance [] ld = findBestLot(building, Lots);
         //     if statements in place to check how many parking lots are available (some permit types restrict to one or two parking lots)
         //     if (ld.length >= 3) { 
-        //       createfirstFrame();
-        //       createsecondFrame();
-        //       createthirdFrame();
+        //       createFirstFrame();
+        //       createSecondFrame();
+        //       createThirdFrame();
         //     }
         //     if (ld.length >= 2) {
-        //        createfirstFrame();
-        //        createsecondFrame();
+        //        createFirstFrame();
+        //        createSecondFrame();
         //     }
         //     if (ld.length >= 1) {
-        //        createfirstFrame();
+        //        createFirstFrame();
         //      }
           
           mainFrame.pack();
