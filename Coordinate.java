@@ -24,5 +24,5 @@ public class Coordinate {
   //public static void main(String args []){ //for testing purposes
     //Coordinate x = new Coordinate (312,159);
     //System.out.print("Latitude: "+ x.getLat() + " Longitude: " + x.getLong() );
-  }
+  //}
 }
