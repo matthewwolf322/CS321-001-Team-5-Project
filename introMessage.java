@@ -67,18 +67,18 @@ public class introMessage extends JPanel{
   
   public void load (){
 
-    letters[0] = Toolkit.getDefaultToolkit().getImage("C:/Users/howar/Desktop/GMU_Fall 2019/CS 321/Test Programs/Graphics/LETTER_S.jpg");
-    letters[1] = Toolkit.getDefaultToolkit().getImage("C:/Users/howar/Desktop/GMU_Fall 2019/CS 321/Test Programs/Graphics/LETTER_M.jpg");
-    letters[2] = Toolkit.getDefaultToolkit().getImage("C:/Users/howar/Desktop/GMU_Fall 2019/CS 321/Test Programs/Graphics/LETTER_A.jpg");
-    letters[3] = Toolkit.getDefaultToolkit().getImage("C:/Users/howar/Desktop/GMU_Fall 2019/CS 321/Test Programs/Graphics/LETTER_R.jpg");
-    letters[4] = Toolkit.getDefaultToolkit().getImage("C:/Users/howar/Desktop/GMU_Fall 2019/CS 321/Test Programs/Graphics/LETTER_T.jpg");
-    letters[5] = Toolkit.getDefaultToolkit().getImage("C:/Users/howar/Desktop/GMU_Fall 2019/CS 321/Test Programs/Graphics/LETTER_P.jpg");
-    letters[6] = Toolkit.getDefaultToolkit().getImage("C:/Users/howar/Desktop/GMU_Fall 2019/CS 321/Test Programs/Graphics/LETTER_A.jpg");
-    letters[7] = Toolkit.getDefaultToolkit().getImage("C:/Users/howar/Desktop/GMU_Fall 2019/CS 321/Test Programs/Graphics/LETTER_R.jpg");
-    letters[8] = Toolkit.getDefaultToolkit().getImage("C:/Users/howar/Desktop/GMU_Fall 2019/CS 321/Test Programs/Graphics/LETTER_K.jpg");
-    letters[9] = Toolkit.getDefaultToolkit().getImage("C:/Users/howar/Desktop/GMU_Fall 2019/CS 321/Test Programs/Graphics/LETTER_I.jpg");
-    letters[10] = Toolkit.getDefaultToolkit().getImage("C:/Users/howar/Desktop/GMU_Fall 2019/CS 321/Test Programs/Graphics/LETTER_N.jpg");
-    letters[11] = Toolkit.getDefaultToolkit().getImage("C:/Users/howar/Desktop/GMU_Fall 2019/CS 321/Test Programs/Graphics/LETTER_G.jpg");
+    letters[0] = Toolkit.getDefaultToolkit().getImage("Graphics/LETTER_S.jpg");
+    letters[1] = Toolkit.getDefaultToolkit().getImage("Graphics/LETTER_M.jpg");
+    letters[2] = Toolkit.getDefaultToolkit().getImage("Graphics/LETTER_A.jpg");
+    letters[3] = Toolkit.getDefaultToolkit().getImage("Graphics/LETTER_R.jpg");
+    letters[4] = Toolkit.getDefaultToolkit().getImage("Graphics/LETTER_T.jpg");
+    letters[5] = Toolkit.getDefaultToolkit().getImage("Graphics/LETTER_P.jpg");
+    letters[6] = Toolkit.getDefaultToolkit().getImage("Graphics/LETTER_A.jpg");
+    letters[7] = Toolkit.getDefaultToolkit().getImage("Graphics/LETTER_R.jpg");
+    letters[8] = Toolkit.getDefaultToolkit().getImage("Graphics/LETTER_K.jpg");
+    letters[9] = Toolkit.getDefaultToolkit().getImage("Graphics/LETTER_I.jpg");
+    letters[10] = Toolkit.getDefaultToolkit().getImage("Graphics/LETTER_N.jpg");
+    letters[11] = Toolkit.getDefaultToolkit().getImage("Graphics/LETTER_G.jpg");
     
     panel = new JPanel();
     panel2 = new JPanel();
