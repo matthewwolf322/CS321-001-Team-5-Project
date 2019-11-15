@@ -69,7 +69,7 @@ public class DistanceFinder {
     for (int j = 0; j < sorted_ld_arr.length; j++) {
       sorted_ld_arr[j] = sorted_ld.get(j);
     }
-    
+    sorted_ld.clear();
     return sorted_ld_arr;
   }
   
