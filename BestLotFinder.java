@@ -76,15 +76,17 @@ public class BestLotFinder {
   return lotStrings;
  }
  public String[] getBuildingList() {
-  String[] buildingStrings = new String[buildingList.length];
-  for(int i = 0; i <buildingStrings.length;i++) {
+  String[] buildingStrings = new String[buildingList.length + 1];
+  buildingStrings[0] = "Select Building";
+  for(int i = 1; i <buildingStrings.length;i++) {
    buildingStrings[i]=buildingList[i].getName();
   }
   return buildingStrings;
  }
  public String[] getPermitList() {
-  String[] permitStrings = new String[permitList.length];
-  for(int i = 0; i < permitStrings.length;i++) {
+  String[] permitStrings = new String[permitList.length + 1];
+  permitStrings[0] = "Select Permit Type";
+  for(int i = 1; i < permitStrings.length;i++) {
    permitStrings[i] = permitList[i].getTitle();
   }
   return permitStrings;
