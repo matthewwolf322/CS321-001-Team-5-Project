@@ -40,7 +40,8 @@ public class PermitReader {
 		for(int i = 0; i < permitArray.length;i++) {
 			permitArray[i] = permitList.get(i);
 		}
-		
+		permitList = null;
+		sc.close();
 		return permitArray;
 		
 		
