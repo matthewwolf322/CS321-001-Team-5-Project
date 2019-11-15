@@ -14,8 +14,6 @@ public class Display extends JFrame{
   
   //create main frame
   private JFrame mainFrame;//master frame for program interface
-  private JFrame findPermitFrame;//to get permit name
-  private JFrame permitInfoFrame;//to display 
   
   //create frames for lot images
   private JFrame firstFrame;
@@ -71,13 +69,14 @@ public class Display extends JFrame{
   private JLabel lbl_secondLot;
   private JLabel lbl_thridLot;
   
-  private JLabel lbl_permit_title;
+  
   private JLabel lbl_permit_selectPermit;
   
   
   //create combo boxes
-  private JComboBox<String> permitCombo;
+  private JComboBox<String> permitCombo;//for user panel
   private JComboBox<String> buildingCombo;
+  
   
   //create text areas
   private JTextArea helpText;
@@ -87,11 +86,11 @@ public class Display extends JFrame{
   private String [] buildingList;
   
 
-  boolean selected_permit = false;
-  boolean selected_building = false;
+  private boolean selected_permit = false;
+  private boolean selected_building = false;
   
-  String inputted_permit;
-  String inputted_building;
+  private String inputted_permit;
+  private String inputted_building;
   
   BestLotFinder blf;
   
@@ -99,6 +98,22 @@ public class Display extends JFrame{
   Timer timer; 
   int delay = 0;
   
+  
+  //for displaying permit information
+  //all permit frames/panels/buttons/comboboxes
+  
+  private JFrame permitFrame;//to display permit information
+  private JPanel permitTitlePanel;//to display title for permit frame
+  private JPanel findPermitPanel;//to get permit name
+  private JPanel displayPermitPanel = new JPanel();;//displays
+  
+  private JLabel lbl_permit_title;
+  private JComboBox<String> selectPermitCombo; //for permit info panel
+  private JButton btn_goToPermit;
+  private boolean canDisplay = false;
+  private String permitName;
+  private BufferedImage permitImage;
+
   public Display() throws IOException{
 
     blf = new BestLotFinder(); //call best lot finder
@@ -189,34 +204,29 @@ public class Display extends JFrame{
     lbl_title = new JLabel("WELCOME TO SMART PARKING");
     lbl_title.setForeground(Color.BLACK);
     lbl_title.setFont(new Font("Bookman Old Style", Font.BOLD, 27));
-    lbl_title.setBorder(new EmptyBorder(new Insets(5, 0, 20, 5)));
+    lbl_title.setBorder(new EmptyBorder(new Insets(5, 0, 10, 5)));
     
     lbl_selectPermit = new JLabel("Please Enter Permit and Building");
     lbl_selectPermit.setForeground(new Color (150,20,3));
     lbl_selectPermit.setFont(new Font("Bookman Old Style", Font.BOLD, 25));
-    lbl_selectPermit.setBorder(new EmptyBorder(new Insets(5, 0, 20, 5)));
+    lbl_selectPermit.setBorder(new EmptyBorder(new Insets(5, 0, 10, 5)));
     
     upperUserPanel.add(lbl_title);
     upperUserPanel.add(Box.createRigidArea(new Dimension(0,30)));
     upperUserPanel.add(lbl_selectPermit);
-    upperUserPanel.add(Box.createRigidArea(new Dimension(0,10)));
+    upperUserPanel.add(Box.createRigidArea(new Dimension(0,30)));
     upperUserPanel.add(inputPanel);
     upperUserPanel.add(goButtonPanel);
     upperUserPanel.setBorder(BorderFactory.createRaisedBevelBorder());
      
   }
   
-  /*public String [] getPermitList(){
-    String [] permitList = {"Select Permit Type", "A","B","C","I","J","RRPD", "K"};
-    return permitList;
-  }*/
-  
   public void createInputPanel(){
     inputPanel = new JPanel();
-    inputPanel.setPreferredSize(new Dimension (450,60));
+    inputPanel.setPreferredSize(new Dimension (450,90));
     inputPanel.setBackground(new Color (224,224,224));
     inputPanel.add(permitCombo);
-    inputPanel.add(Box.createRigidArea(new Dimension(11,0)));
+    inputPanel.add(Box.createRigidArea(new Dimension(9,0)));
     inputPanel.add(buildingCombo);
   }
   
@@ -226,7 +236,7 @@ public class Display extends JFrame{
     goButtonPanel.setPreferredSize(new Dimension(445,50));
     goButtonPanel.setAlignmentX(LEFT_ALIGNMENT);
     BoxLayout boxLayout_X = new BoxLayout(goButtonPanel,BoxLayout.LINE_AXIS);
-    goButtonPanel.add(Box.createRigidArea(new Dimension(295,50)));
+    goButtonPanel.add(Box.createRigidArea(new Dimension(295,30)));
     goButtonPanel.add(btn_findLot);
     goButtonPanel.setBackground(new Color (224,224,224));
   }
@@ -335,13 +345,11 @@ public class Display extends JFrame{
     key_infoPanel.add(Box.createRigidArea(new Dimension(20,0)));
     key_infoPanel.add(btn_about);
     btn_about.setBorder(new EmptyBorder(new Insets(5, 5,5, 5)));
-    //key_infoPanel.setBorder(BorderFactory.createMatteBorder(
-                                   //1, 5, 1, 1, Color.red));
     
   }
   
   public void createFirstFrame(LotDistance [] ld) throws IOException{
-    firstFrame = new JFrame("firstframe");
+    firstFrame = new JFrame("Closest Lot");
     firstFrame.setSize(3000,3000);
     firstFrame.setLocationRelativeTo(null);
    
@@ -358,7 +366,7 @@ public class Display extends JFrame{
   } 
 
   public void createSecondFrame(LotDistance [] ld) throws IOException{
-    secondFrame = new JFrame("secondframe");
+    secondFrame = new JFrame("Second Closest Lot");
     secondFrame.setSize(3000,3000);
     secondFrame.setLocationRelativeTo(null);
    
@@ -375,7 +383,7 @@ public class Display extends JFrame{
   }
   
   public void createThirdFrame(LotDistance [] ld) throws IOException {
-    thirdFrame = new JFrame("thirdframe");
+    thirdFrame = new JFrame("Third Closest Lot");
     thirdFrame.setSize(3000,3000);
     thirdFrame.setLocationRelativeTo(null);
    
@@ -419,52 +427,77 @@ public class Display extends JFrame{
   } 
 
 
-  public void createPermitInfoFrames(){
-     JFrame findPermitFrame = new JFrame("Select Permit");//to get permit name
-     JFrame permitInfoFrame = new JFrame("Display Permit Information");//to display 
-     findPermitFrame.setLocationRelativeTo(null);
-     findPermitFrame.setResizable(false);
-     JPanel findPermitPanel = new JPanel();
-     
-     findPermitPanel.setPreferredSize(new Dimension(500,100));
-     findPermitPanel.setBorder(new EmptyBorder(new Insets(30, 0, 0, 15)));
-     findPermitPanel.setBackground(new Color (224,224,224));
+  public void createPermitInfoFrame() throws IOException{
+    permitFrame = new JFrame("Display Permit Information");//to display permit information
+    permitFrame.setSize(1400,1400);
+    permitFrame.setLocationRelativeTo(null);
+    permitFrame.setResizable(false);
     
-     lbl_permit_title = new JLabel("Find Your Permit Information");
-     lbl_permit_title.setForeground(Color.BLACK);
-     lbl_permit_title.setFont(new Font("Bookman Old Style", Font.BOLD, 27));
-     lbl_permit_title.setBorder(new EmptyBorder(new Insets(5, 0, 20, 5)));
+    permitTitlePanel = new JPanel();
+    permitTitlePanel.setPreferredSize(new Dimension(1400,200));
+    permitTitlePanel.setBorder(new EmptyBorder(new Insets(30, 10, 0, 30)));
+    permitTitlePanel.setBackground(new Color (1,68,33));
+    permitTitlePanel.setAlignmentY(CENTER_ALIGNMENT);
+    BoxLayout boxLayout_Y = new BoxLayout(permitTitlePanel,BoxLayout.Y_AXIS);
+    permitTitlePanel.setLayout(boxLayout_Y);
     
-     lbl_permit_selectPermit = new JLabel("Please Enter Permit");
-     lbl_permit_selectPermit.setForeground(new Color (150,20,3));
-     lbl_permit_selectPermit.setFont(new Font("Bookman Old Style", Font.BOLD, 25));
-     lbl_permit_selectPermit.setBorder(new EmptyBorder(new Insets(5, 0, 20, 5)));
+    lbl_permit_title = new JLabel("PERMIT INFORMATION");
+    lbl_permit_title.setFont(new Font("Bookman Old Style", Font.BOLD, 50));
+    lbl_permit_title.setForeground( new Color (255,165,0));
     
-     findPermitPanel.add(lbl_permit_title);
-     findPermitPanel.add(Box.createRigidArea(new Dimension(0,30)));
-     findPermitPanel.add(lbl_selectPermit);
-     findPermitPanel.add(Box.createRigidArea(new Dimension(0,10)));
-     findPermitPanel.add(inputPanel);
-     findPermitPanel.add(goButtonPanel);
-     findPermitPanel.setBorder(BorderFactory.createRaisedBevelBorder());
-     
-     
-     
-     
-     JLabel lbl_permitSelect = new JLabel("Select Permit Type");
-     JComboBox permitSelectCombo = new JComboBox<String>(blf.getPermitList());
-     permitSelectCombo.setFont(new Font("Arial", Font.BOLD, 30));
-     permitSelectCombo.addActionListener(permitSelectCombo);
-     
-     findPermitPanel.add(lbl_permitSelect);
-     findPermitPanel.add(permitSelectCombo);
-     findPermitFrame.setVisible(true);
-     findPermitFrame.add(findPermitPanel);
-     
+    permitTitlePanel.add(lbl_permit_title);
+    
+    findPermitPanel = new JPanel();//to get permit name
+    findPermitPanel.setPreferredSize(new Dimension(300,200));
+    
+    //findPermitPanel.setBorder(new EmptyBorder(new Insets(30, 0, 4, 30)));
+    findPermitPanel.setBackground(new Color (1,68,33));
+
+    findPermitPanel.add(selectPermitCombo);
+    findPermitPanel.add(Box.createRigidArea(new Dimension(20,0)));
+    findPermitPanel.add(btn_goToPermit);
+    
+    permitTitlePanel.add(findPermitPanel);
+    
+    //displays
+    displayPermitPanel.setPreferredSize(new Dimension(200,100));
+    displayPermitPanel.setBorder(new EmptyBorder(new Insets(30, 0, 0, 15)));
+    displayPermitPanel.setBackground(new Color (1,68,33));
+    permitImage = ImageIO.read(new File("assets/George_Mason_Patriots_logo.png"));
+    JLabel label = new JLabel(new ImageIcon(permitImage));
+    //label.setBorder(BorderFactory.createRaisedBevelBorder());
+    
+    //add map to mapPanel
+    displayPermitPanel.add(label);
+    permitFrame.add(permitTitlePanel,BorderLayout.NORTH);
+    permitFrame.add(displayPermitPanel);
+    permitFrame.setVisible(true);
+
   }
   
+  public void displayPermitInfo(String givenName){
+    
+    try{
+      permitImage = ImageIO.read(new File(getPermitImage(givenName)));
+      JLabel label = new JLabel(new ImageIcon(permitImage));
+      label.setBorder(BorderFactory.createRaisedBevelBorder());
+      System.out.print(getPermitImage(givenName));
+      displayPermitPanel.removeAll();
+      displayPermitPanel.revalidate();
+      displayPermitPanel.repaint();
+      displayPermitPanel.add(label); 
+      permitFrame.add(displayPermitPanel);
+      permitFrame.setVisible(true);//reset the image
+    }
+    catch(IOException e){
+      System.out.print("Cannot display image");
+    }
+
+  }
+  
+  
   public String getPermitImage(String permitName){
-    if (permitName.equals("West Campus") || permitName.equals("Lot M & P") ||
+    if (permitName.equals("West Campus") || permitName.equals("Lot M & P Permit") ||
         permitName.equals("General") || permitName.equals("Resident Student Annual Lite")){
       return "assets/student_surface.png";
     }
@@ -474,12 +507,12 @@ public class Display extends JFrame{
       return "assets/FFX_Faculty_Staff_Surface_Lot.png";
     }
     
-    /*else if(permitName.equals("Mason Pond (Student Annual)") || permitName.equals("Shenandoah Deck (Reserved Student)") ||
+    else if(permitName.equals("Mason Pond (Student Annual)") || permitName.equals("Shenandoah Deck (Reserved Student)") ||
             permitName.equals("Rappahannock River Parking Deck")){
       return "assets/FFX_Student_Reserved_Deck.png";
-    }*/
+    }
     
-    else if(permitName.equals("Lot J") || permitName.equals("Lot I")|| permitName.equals("Lot R")) {
+    else if(permitName.equals("Lot J") || permitName.equals("Lot I")|| permitName.equals("Lot R")) { //change to Permit
       return "assets/FFX_Reserved_Surface_Lot-l2.png";
     }
     else if (permitName.equals("Mason Pond F/S Annual") ||
@@ -493,7 +526,6 @@ public class Display extends JFrame{
 
   public void createCombos(){
     //create combo boxes
-    //String buildingList[] = {"Select Building" ,"Johnson Center", "Robinson B", "Innovation", "Center for the Arts", "Fennwick Library"};
     
     // commented lines: stores selected permit and building values 
     // selected_permit and selected_building used to check if the user selected both the permit and the building 
@@ -543,10 +575,33 @@ public class Display extends JFrame{
       
     });
     
+    selectPermitCombo = new JComboBox<String>(permitList);
+    selectPermitCombo.setFont(new Font("Arial", Font.BOLD, 20));
+    selectPermitCombo.setSelectedIndex(0);
     
+    selectPermitCombo.addActionListener(
+      new ActionListener(){
+      @Override
+          public void actionPerformed(ActionEvent e){
+            JComboBox<String> this_combo = (JComboBox<String>)e.getSource();
+
+            String command = e.getActionCommand();
+            if ("comboBoxChanged".equals(command)) {
+                    permitName = (String) selectPermitCombo.getSelectedItem();
+                    System.out.print("Permit Name" + permitName);
+                    if(permitName.equals("Select Permit Type")){
+                      canDisplay = false;
+                    }
+                    else{
+                      canDisplay = true;
+                    }
+            }
+      }  
+    });
     
+
   }
-  public void createButtons(){
+  public void createButtons() throws IOException{
     //create buttons 
     btn_firstLot = new JButton("#1 Lot");
     btn_firstLot.setBorder(BorderFactory.createBevelBorder(0));
@@ -656,8 +711,10 @@ public class Display extends JFrame{
                btn_firstLot.setBackground(Color.GREEN);
                btn_firstLot.setEnabled(true);
                btn_secondLot.setText("None");
-                btn_thirdLot.setFont(new Font("Arial", Font.BOLD, 35));
+               btn_secondLot.setEnabled(false);
+               btn_thirdLot.setFont(new Font("Arial", Font.BOLD, 35));
                btn_thirdLot.setText("None");
+               btn_thirdLot.setEnabled(false);
                 btn_thirdLot.setFont(new Font("Arial", Font.BOLD, 35));
              }
              catch(IOException e) {
@@ -685,12 +742,17 @@ public class Display extends JFrame{
     btn_permitInfo = new JButton("Permit Info");
     btn_permitInfo.setFont(new Font("Arial", Font.BOLD, 22));
     //btn_permitInfo.setBackground(new Color(225,204,51));
-    btn_permitInfo.addActionListener(new ActionListener(){
+    btn_permitInfo.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent arg0){
         helpText.append("Displaying Permit Info ...\n");
-        createPermitInfoFrames();
-        mainFrame.pack();
+        try{
+          createPermitInfoFrame();
+        }
+        catch(IOException e){
+          e.printStackTrace();
+        }
+        
       }
       
     });
@@ -702,53 +764,30 @@ public class Display extends JFrame{
       @Override
       public void actionPerformed(ActionEvent arg0){
         helpText.append("Displaying About Info ...\n");
-        createPermitInfoFrames();
+        //createPermitInfoFrames();
         mainFrame.pack();
       }
       
     });
     
-    /*btn_firstLot = new JButton("#1 Lot");
-    btn_firstLot.setBorder(BorderFactory.createBevelBorder(0));
-    btn_firstLot.setFont(new Font("Arial", Font.BOLD, 35));
-    //btn_firstLot.setBackground(new Color (0,182,0,155));
-    btn_firstLot.setForeground(Color.BLACK);
-    btn_firstLot.setBorder(BorderFactory.createRaisedBevelBorder());
-    //btn_firstLot.setBackground(Color.GREEN);
-    btn_firstLot.setEnabled(true);
-    btn_firstLot.addActionListener(new ActionListener(){
+    btn_goToPermit = new JButton("Get Info");
+    btn_goToPermit.setBorder(BorderFactory.createBevelBorder(0));
+    btn_goToPermit.setFont(new Font("Arial", Font.BOLD, 35));
+    btn_goToPermit.setForeground(Color.BLACK);
+    btn_goToPermit.addActionListener(new ActionListener(){
       @Override
       public void actionPerformed(ActionEvent arg0){
-        firstFrame.setVisible(true);
-      }
-      
-    });*/
-    
-    /*btn_secondLot = new JButton("#2 Lot");
-    //btn_secondLot.setBackground(Color.YELLOW);
-    btn_secondLot.setFont(new Font("Arial", Font.BOLD, 35));
-    btn_secondLot.setBorder(BorderFactory.createBevelBorder(0));
-    btn_secondLot.setEnabled(true);
-    btn_secondLot.addActionListener(new ActionListener(){
-      @Override
-      public void actionPerformed(ActionEvent arg0){
-        secondFrame.setVisible(true);
+        //get permit combo info
+        if (canDisplay = true){
+          displayPermitInfo(permitName);
+        }
+        else{
+          JOptionPane.showMessageDialog(mainFrame, "Please Select a Permit to Continue");
+        }
       }
       
     });
     
-    btn_thirdLot = new JButton("#3 Lot");
-    //btn_thirdLot.setBackground(Color.RED);
-    btn_thirdLot.setFont(new Font("Arial", Font.BOLD, 35));
-    btn_thirdLot.setBorder(BorderFactory.createBevelBorder(0));
-    btn_thirdLot.setEnabled(true);
-    btn_thirdLot.addActionListener(new ActionListener(){
-      @Override
-      public void actionPerformed(ActionEvent arg0){
-        thirdFrame.setVisible(true);
-      }
-      
-    });*/
     
   }
 }
