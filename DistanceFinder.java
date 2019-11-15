@@ -27,7 +27,7 @@ public class DistanceFinder {
     ArrayList <LotDistance> sorted_ld = new ArrayList<LotDistance>();
     double dist = 0.0;
     double lowest_dist = 0.0; 
-    
+    System.out.println("lots length" + lots.length + "\n");
     // for each lot, loop calculates the distance from a lot to target by calling findDistance()
     // and each lot's name and distance to target is used to create a LotDistance object
     // if a lot's distance is the lowest distance to the target building it's LotDistance object is added to the beginning of the list
