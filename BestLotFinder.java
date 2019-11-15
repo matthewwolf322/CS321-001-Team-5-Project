@@ -79,7 +79,7 @@ public class BestLotFinder {
   String[] buildingStrings = new String[buildingList.length + 1];
   buildingStrings[0] = "Select Building";
   for(int i = 1; i <buildingStrings.length;i++) {
-   buildingStrings[i]=buildingList[i].getName();
+   buildingStrings[i]=buildingList[i-1].getName();
   }
   return buildingStrings;
  }
@@ -87,7 +87,7 @@ public class BestLotFinder {
   String[] permitStrings = new String[permitList.length + 1];
   permitStrings[0] = "Select Permit Type";
   for(int i = 1; i < permitStrings.length;i++) {
-   permitStrings[i] = permitList[i].getTitle();
+   permitStrings[i] = permitList[i-1].getTitle();
   }
   return permitStrings;
  }
