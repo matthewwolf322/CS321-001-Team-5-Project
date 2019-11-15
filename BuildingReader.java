@@ -28,7 +28,6 @@ public class BuildingReader {
 		while(sc.hasNextLine()) {
 			temp = sc.nextLine();
 			dataHolder = temp.split(",");
-			System.out.println(dataHolder[0]);
 			tempLocation = new Location(dataHolder[0],new Coordinate(Double.parseDouble(dataHolder[1]),Double.parseDouble(dataHolder[2])));
 			array.add(tempLocation);
 			
