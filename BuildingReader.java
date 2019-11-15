@@ -37,7 +37,8 @@ public class BuildingReader {
 		for(int i = 0; i < returnList.length;i++) {
 			returnList[i] = array.get(i);
 		}
-		
+		array = null;
+		sc.close();
 		return returnList;
 		
 	}
