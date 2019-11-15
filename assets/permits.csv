@@ -1,15 +1,15 @@
-West Campus,West Campus,,,,,,,,,,,,,,,,
-Lot M & P,West Campus,M,P,,,,,,,,,,,,,,
-General,West Campus,M,P,O,A,C,K,L,PV,Rappahannock Deck,,,,,,,
-Resident Student Annual Lite,West Campus,M,P,O,K,,,,,,,,,,,,
-Mason Pond (Student Annual),Mason Pond Deck ,M,P,O,West Campus,,,,,,,,,,,,
-Shenandoah Deck (Reserved Student),Shenandoah Deck,,,,,,,,,,,,,,,,
-Rappahannock River Parking Deck,Rappahannock Deck,M,P,O,West Campus,,,,,,,,,,,,
-Lot J,J,M,P,O,West Campus,,,,,,,,,,,,
-Lot I,I,M,P,O,West Campus,,,,,,,,,,,,
-Lot R,R,M,P,O,West Campus,,,,,,,,,,,,
-General Faculty/Staff Annual,A,C,K,L,PV,D,M,P,O,West Campus,I,J,Rappahannock Deck,,,,
-Mason Pond F/S Annual,Mason Pond Deck ,Rappahannock Deck,I,J,A,C,K,L,M,O,PV,P,West Campus,,,,
-Shenandoah F/S Annual,Shenandoah Deck,Rappahannock Deck,I,J,A,C,K,L,M,O,PV,P,West Campus,,,,
-RRPD F/S Annual,Rappahannock Deck,I,J,A,C,K,L,M,O,P,PV,West,,,,,
-RRPD Roof Only F/S Annual,Rappahannock Deck,,,,,,,,,,,,,,,,
+West Campus,West Campus
+Lot M & P,West Campus,M,P
+General,West Campus,M,P,O,A,C,K,L,PV,Rappahannock Deck
+Resident Student Annual Lite,West Campus,M,P,O,K
+Mason Pond (Student Annual),Mason Pond Deck ,M,P,O,West Campus
+Shenandoah Deck (Reserved Student),Shenandoah Deck
+Rappahannock River Parking Deck,Rappahannock Deck,M,P,O,West Campus
+Lot J,J,M,P,O,West Campus
+Lot I,I,M,P,O,West Campus
+Lot R,R,M,P,O,West Campus
+General Faculty/Staff Annual,A,C,K,L,PV,D,M,P,O,West Campus,I,J,Rappahannock Deck
+Mason Pond F/S Annual,Mason Pond Deck ,Rappahannock Deck,I,J,A,C,K,L,M,O,PV,P,West Campus
+Shenandoah F/S Annual,Shenandoah Deck,Rappahannock Deck,I,J,A,C,K,L,M,O,PV,P,West Campus
+RRPD F/S Annual,Rappahannock Deck,I,J,A,C,K,L,M,O,P,PV,West
+RRPD Roof Only F/S Annual,Rappahannock Deck
