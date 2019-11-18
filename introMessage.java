@@ -53,11 +53,13 @@ public class introMessage extends JPanel{
     if(count < 5){//add first 5 letters to top panel
       topPanel.add(labels[count]);
       topPanel.add(Box.createRigidArea(new Dimension(5,0))); //for spacing
+      frame.repaint();//repaint background transparent
       frame.pack();
     }
     else{//add "Parking" to bottom Panel
       bottomPanel.add(labels[count]);
       bottomPanel.add(Box.createRigidArea(new Dimension(5,0)));
+      frame.repaint();//repaint background transparent
       frame.pack();
     }
     count++;
@@ -96,23 +98,27 @@ public class introMessage extends JPanel{
     frame.setLayout(boxlayoutY);
     
     frame.setSize(1550,800);
-    
-    frame.setUndecorated(true);
-    frame.setBackground(new Color(0,0,0,0));
-    frame.getContentPane().setBackground(new Color (0,0,0,50));
-    //panel.setBackground(new Color (0,0,0,30));
-    //panel2.setBackground(new Color (0,0,0,30));
-    frame.add(topPanel);
     topPanel.setPreferredSize(new Dimension(1550,300));
     bottomPanel.setPreferredSize(new Dimension(1550,300));
+    
+    //make panels transparent
+    topPanel.setBackground(new Color (0,0,0,0));
+    bottomPanel.setBackground(new Color (0,0,0,0));
+
+    //make frame transparent
+    frame.setUndecorated(true);
+    frame.setBackground(new Color(0,0,0,0));
+   
+    //add panels
+    frame.add(topPanel);
     frame.add(bottomPanel);
     frame.setLocationRelativeTo(null);
     
-    frame.setOpacity(0.55f);
+    frame.setOpacity(.80f);//.55
     frame.setVisible(true);
     frame.requestFocus();
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+    
   }
   
   public void run(){
