@@ -226,17 +226,17 @@ public class Display extends JFrame{
     //initialize upperUserPanel
     upperUserPanel = new JPanel();
     upperUserPanel.setPreferredSize(new Dimension(500,100));
-    upperUserPanel.setBorder(new EmptyBorder(new Insets(30, 0, 0, 15)));
+    upperUserPanel.setBorder(new EmptyBorder(new Insets(30, 0, 0, 0))); //15
     upperUserPanel.setBackground(LIGHT_GREY);
     
     //set up title
-    lbl_title = new JLabel("WELCOME TO SMART PARKING");
+    lbl_title = new JLabel("WELCOME TO SMART PARKING", SwingConstants.CENTER);
     lbl_title.setForeground(Color.BLACK);
     lbl_title.setFont(new Font("Bookman Old Style", Font.BOLD, 27));
     lbl_title.setBorder(new EmptyBorder(new Insets(5, 0, 10, 5)));
     
     //set up label for comboboxes
-    lbl_selectPermit = new JLabel("Please Enter Permit and Building");
+    lbl_selectPermit = new JLabel("Please Enter Permit and Building", SwingConstants.CENTER);
     lbl_selectPermit.setForeground(new Color (150,20,3));
     lbl_selectPermit.setFont(new Font("Bookman Old Style", Font.BOLD, 25));
     lbl_selectPermit.setBorder(new EmptyBorder(new Insets(5, 0, 10, 5)));
@@ -248,6 +248,14 @@ public class Display extends JFrame{
     upperUserPanel.add(Box.createRigidArea(new Dimension(0,30)));
     upperUserPanel.add(inputPanel);
     upperUserPanel.add(goButtonPanel);
+    upperUserPanel.add(Box.createRigidArea(new Dimension(10,30)));
+    
+    //add warning
+    JLabel warning = new JLabel(("Warning: Smart Parking does not gaurantee a parking spot"), SwingConstants.CENTER);
+    warning.setFont(new Font ("Seif", Font.ITALIC, 15));
+    warning.setPreferredSize(new Dimension(500,20));
+    upperUserPanel.add(Box.createRigidArea(new Dimension(500,10)));
+    upperUserPanel.add(warning);
     upperUserPanel.setBorder(BorderFactory.createRaisedBevelBorder());   
   }
   
@@ -263,7 +271,6 @@ public class Display extends JFrame{
     
     //add components
     inputPanel.add(permitCombo);
-    inputPanel.add(Box.createRigidArea(new Dimension(9,0)));
     inputPanel.add(buildingCombo);
   }
   /*
@@ -538,22 +545,21 @@ public class Display extends JFrame{
     
     permitTitlePanel = new JPanel();
     permitTitlePanel.setPreferredSize(new Dimension(1400,200));
-    permitTitlePanel.setBorder(new EmptyBorder(new Insets(30, 10, 0, 30)));
+    permitTitlePanel.setBorder(new EmptyBorder(new Insets(30, 0, 0, 30)));//10
     permitTitlePanel.setBackground(new Color (1,68,33));
-    permitTitlePanel.setAlignmentY(CENTER_ALIGNMENT);
-    BoxLayout boxLayout_Y = new BoxLayout(permitTitlePanel,BoxLayout.Y_AXIS);
-    permitTitlePanel.setLayout(boxLayout_Y);
     
-    lbl_permit_title = new JLabel("PERMIT INFORMATION");
+    lbl_permit_title = new JLabel("   GMU PERMIT INFORMATION", SwingConstants.CENTER);
+    lbl_permit_title.setPreferredSize(new Dimension(1400,110));
+    lbl_permit_title.setBorder(new EmptyBorder(new Insets(0, 10, 20, 0)));
     lbl_permit_title.setFont(new Font("Bookman Old Style", Font.BOLD, 50));
     lbl_permit_title.setForeground( new Color (255,165,0));
     
     permitTitlePanel.add(lbl_permit_title);
     
     findPermitPanel = new JPanel();//to get permit name
-    findPermitPanel.setPreferredSize(new Dimension(300,200));
+    findPermitPanel.setPreferredSize(new Dimension(1000,60));
     
-    //findPermitPanel.setBorder(new EmptyBorder(new Insets(30, 0, 4, 30)));
+    findPermitPanel.setBorder(new EmptyBorder(new Insets(0, 10, 5, 0))); //30
     findPermitPanel.setBackground(new Color (1,68,33));
 
     findPermitPanel.add(selectPermitCombo);
@@ -572,7 +578,7 @@ public class Display extends JFrame{
     
     //add map to mapPanel
     displayPermitPanel.add(label);
-    permitFrame.add(permitTitlePanel,BorderLayout.NORTH);
+    permitFrame.add(permitTitlePanel, BorderLayout.NORTH);
     permitFrame.add(displayPermitPanel);
     permitFrame.setVisible(true);
 
@@ -666,6 +672,7 @@ public class Display extends JFrame{
     //initialize builidngCombo-------------------------------------------------
     buildingCombo = new JComboBox<String>(buildingList);
     buildingCombo.setFont(new Font("Arial", Font.BOLD, 20));
+    buildingCombo.setPreferredSize(permitCombo.getPreferredSize());
     buildingCombo.setSelectedIndex(0); //set value to "Select Building"
     
      //combo action - set inputted_building to selected value, set selected_ building to true if user has selected a value
@@ -706,9 +713,11 @@ public class Display extends JFrame{
                     permitName = (String) selectPermitCombo.getSelectedItem();//get user selection
                     if(permitName.equals("Select Permit Type")){//check that selection is valid
                       canDisplay = false;
+                      System.out.print(canDisplay);
                     }
                     else{
                       canDisplay = true;
+                      System.out.print(canDisplay);
                     }
             }
       }  
@@ -902,7 +911,7 @@ public class Display extends JFrame{
     });
     
     //initialize btn_goToPermit, button located on Permit Frame-------------------
-    btn_goToPermit = new JButton("Get Info");
+    btn_goToPermit = new JButton(" Go ");
     btn_goToPermit.setBorder(BorderFactory.createBevelBorder(0));
     btn_goToPermit.setFont(new Font("Arial", Font.BOLD, 35));
     btn_goToPermit.setForeground(Color.BLACK);
@@ -912,7 +921,7 @@ public class Display extends JFrame{
       @Override
       public void actionPerformed(ActionEvent arg0){
         //get permit combo info
-        if (canDisplay = true){//check that a permit has been selected in the combo box
+        if (canDisplay == true){//check that a permit has been selected in the combo box
           displayPermitInfo(permitName);
         }
         else{
