@@ -14,18 +14,18 @@ import java.awt.event.*;
 public class introMessage extends JPanel{
   
   private JFrame frame;
-  public final static int ONE_SECOND = 300;
+  public final static int THREE_HUNDRED = 300;
   Image [] letters = new Image [12];
   JLabel [] labels = new JLabel [12];
-  JPanel panel;
-  JPanel panel2;
+  JPanel topPanel;
+  JPanel bottomPanel;
   private Timer timer;
   private int count = 0;
   
   Display mainFrame;
   
   public void initTimer() throws IOException{
-    timer = new Timer(ONE_SECOND, new ActionListener(){
+    timer = new Timer(THREE_HUNDRED, new ActionListener(){
     public void actionPerformed(ActionEvent evt){
       if (count < labels.length){
         addLetter();
@@ -37,11 +37,10 @@ public class introMessage extends JPanel{
         timer.stop();
         frame.setVisible(false);
         try{
-          mainFrame = new Display();
+          mainFrame = new Display();//create new display
         }
         catch(IOException e){
             e.printStackTrace();
-            
          }
       }
     }
@@ -51,14 +50,14 @@ public class introMessage extends JPanel{
   }
   
   public void addLetter(){
-    if(count < 5){
-      panel.add(labels[count]);
-      panel.add(Box.createRigidArea(new Dimension(5,0)));
+    if(count < 5){//add first 5 letters to top panel
+      topPanel.add(labels[count]);
+      topPanel.add(Box.createRigidArea(new Dimension(5,0))); //for spacing
       frame.pack();
     }
-    else{
-      panel2.add(labels[count]);
-      panel2.add(Box.createRigidArea(new Dimension(5,0)));
+    else{//add "Parking" to bottom Panel
+      bottomPanel.add(labels[count]);
+      bottomPanel.add(Box.createRigidArea(new Dimension(5,0)));
       frame.pack();
     }
     count++;
@@ -67,6 +66,7 @@ public class introMessage extends JPanel{
   
   public void load (){
 
+    //get images
     letters[0] = Toolkit.getDefaultToolkit().getImage("Graphics/LETTER_S.jpg");
     letters[1] = Toolkit.getDefaultToolkit().getImage("Graphics/LETTER_M.jpg");
     letters[2] = Toolkit.getDefaultToolkit().getImage("Graphics/LETTER_A.jpg");
@@ -80,8 +80,11 @@ public class introMessage extends JPanel{
     letters[10] = Toolkit.getDefaultToolkit().getImage("Graphics/LETTER_N.jpg");
     letters[11] = Toolkit.getDefaultToolkit().getImage("Graphics/LETTER_G.jpg");
     
-    panel = new JPanel();
-    panel2 = new JPanel();
+    //initialize panels
+    topPanel = new JPanel();
+    bottomPanel = new JPanel();
+    
+    //initialize labels
     for (int i = 0; i< labels.length; i ++){
       labels[i] = new JLabel(new ImageIcon(letters[i]));
       labels[i].setBorder(BorderFactory.createRaisedBevelBorder());
@@ -99,10 +102,10 @@ public class introMessage extends JPanel{
     frame.getContentPane().setBackground(new Color (0,0,0,50));
     //panel.setBackground(new Color (0,0,0,30));
     //panel2.setBackground(new Color (0,0,0,30));
-    frame.add(panel);
-    panel.setPreferredSize(new Dimension(1550,300));
-    panel2.setPreferredSize(new Dimension(1550,300));
-    frame.add(panel2);
+    frame.add(topPanel);
+    topPanel.setPreferredSize(new Dimension(1550,300));
+    bottomPanel.setPreferredSize(new Dimension(1550,300));
+    frame.add(bottomPanel);
     frame.setLocationRelativeTo(null);
     
     frame.setOpacity(0.55f);
@@ -121,12 +124,6 @@ public class introMessage extends JPanel{
    catch(IOException e){
      e.printStackTrace();
    }
-   
   }
-  
-  public static void main( String [] args){
-
-  }
-
 }
 

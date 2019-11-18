@@ -2,14 +2,19 @@ import java.awt.*;
 import java.awt.image.*;
 import java.awt.event.*;
 import java.io.*;
+import java.io.IOException;
 import javax.swing.*;
 import javax.swing.border.*;
-import javax.imageio.ImageIO;
 import javax.swing.border.EmptyBorder;
-import java.io.IOException;
-
+import javax.imageio.ImageIO;
 
 public class Display extends JFrame{
+  
+  //create global variables
+  
+  //Create common colors
+  private static Color LIGHT_GREY = new Color(224,224,224);
+  
 
   
   //create main frame
@@ -21,14 +26,14 @@ public class Display extends JFrame{
   private JFrame thirdFrame;
   
   //create panels for map and user input
-  private JPanel userPanel;//holds upperUserPanel, centerUserPanel and key_infoPanel 
+  private JPanel userPanel;//holds upperUserPanel, centerUserPanel and aboutPanel 
   private JPanel mapPanel;//displays main map
   
   //smaller panels to hold objects
   private JPanel inputPanel;//holds combo boxes
   private JPanel goButtonPanel;//holds "Find Lot" Button
   private JPanel buttonPanel;//holds 1st/2nd/3rd lot buttons
-  private JPanel key_infoPanel;// hold about button and permit info button
+  private JPanel aboutPanel;// hold about button and permit info button
   private JPanel upperUserPanel; //Holds the inputPanel and title
   private JPanel centerUserPanel; //holds buttonPanel and title
 
@@ -69,26 +74,22 @@ public class Display extends JFrame{
   private JLabel lbl_secondLot;
   private JLabel lbl_thridLot;
   
-  
-  private JLabel lbl_permit_selectPermit;
-  
-  
-  //create combo boxes
+  //create combo boxes for main user interface
   private JComboBox<String> permitCombo;//for user panel
   private JComboBox<String> buildingCombo;
-  
   
   //create text areas
   private JTextArea helpText;
   
-  
+  //combo box values
   private String [] permitList;
   private String [] buildingList;
   
-
+  //check if permtit and building have been selected
   private boolean selected_permit = false;
   private boolean selected_building = false;
   
+  //values selected in combo boxes
   private String inputted_permit;
   private String inputted_building;
   
@@ -110,13 +111,24 @@ public class Display extends JFrame{
   private JLabel lbl_permit_title;
   private JComboBox<String> selectPermitCombo; //for permit info panel
   private JButton btn_goToPermit;
-  private boolean canDisplay = false;
+  private boolean canDisplay = false; //determines if user has selected a permit
   private String permitName;
   private BufferedImage permitImage;
 
+  
+  
+  private JFrame aboutFrame;
+  private JPanel aboutInfoPanel;
+  private JLabel lbl_aboutText;
+  
+  /*
+   * Display creates a new BestLotFinder Object and creates GUI
+   */ 
   public Display() throws IOException{
 
     blf = new BestLotFinder(); //call best lot finder
+    
+    //get lists for combo boxes
     permitList = blf.getPermitList();
     buildingList = blf.getBuildingList();
     
@@ -127,7 +139,7 @@ public class Display extends JFrame{
     createButtons();
     createUpperUserPanel();//create panel to hold the top set of userPanel components
     createCenterUserPanel();
-    createKeyInfoPanel();
+    createAboutPanel();
     createUserPanel();
     
     mainFrame.add(userPanel,BorderLayout.EAST);
@@ -136,10 +148,15 @@ public class Display extends JFrame{
     mainFrame.setVisible(true);//set visible after elements are added
   }
   
+  /*
+   * Create a new introMessage object, run the intro screen and then open
+   * the main display
+   */
   public static void main (String[] args) throws IOException{
     introMessage titleScreen = new introMessage();
     titleScreen.run();
   }
+  
   /*
    * initTimer runs a timer to allow the intro screen to play before opening the main gui
    * 
@@ -153,8 +170,7 @@ public class Display extends JFrame{
       else{
         timer.stop();
       }
-    }
-    
+    } 
  });
     timer.start();
   }
@@ -170,7 +186,6 @@ public class Display extends JFrame{
     
     //get map image
     BufferedImage image = ImageIO.read(new File("assets/mapOfFairfaxCampus.png"));
-    //BufferedImage image = ImageIO.read(new File("assets/MapOfFairfaxCampus.png"));
     JLabel label = new JLabel(new ImageIcon(image));
     label.setBorder(BorderFactory.createRaisedBevelBorder());
     
@@ -181,219 +196,280 @@ public class Display extends JFrame{
     //add mapPanel to mainFrame
     mainFrame.add(mapPanel);   
   }
-  
+  /*
+   * The mainframe is broken up into two main panels, the user panel and the map panel
+   * the user panel holds all interactive/input features of the main frame
+   * The user panel contains the upperUserPanel (user input), centerUserPanel(lot buttons),
+   * and aboutPanel(about and permit buttons)
+   */ 
   public void createUserPanel(){
+    //initialize userPanel
     userPanel = new JPanel();
     userPanel.setPreferredSize(new Dimension(500,700));
-    userPanel.setLayout(new GridLayout(3,1));//four sections
+    userPanel.setLayout(new GridLayout(3,1));//three sections divided vertically
     userPanel.setBorder(BorderFactory.createMatteBorder(2, 2, 2, 2, Color.BLACK));
+    
+    //add components
     userPanel.add(upperUserPanel);
     userPanel.add(centerUserPanel);
-    userPanel.add(key_infoPanel); 
+    userPanel.add(aboutPanel); 
   }
-  
+  /*
+   * upperUserPanel holds the inputPanel and goButtonPanel
+   * 
+   */ 
   public void createUpperUserPanel(){
+    //build sub panels
     createInputPanel();
     createGoButtonPanel();
     
+    //initialize upperUserPanel
     upperUserPanel = new JPanel();
     upperUserPanel.setPreferredSize(new Dimension(500,100));
     upperUserPanel.setBorder(new EmptyBorder(new Insets(30, 0, 0, 15)));
-    upperUserPanel.setBackground(new Color (224,224,224));
+    upperUserPanel.setBackground(LIGHT_GREY);
     
+    //set up title
     lbl_title = new JLabel("WELCOME TO SMART PARKING");
     lbl_title.setForeground(Color.BLACK);
     lbl_title.setFont(new Font("Bookman Old Style", Font.BOLD, 27));
     lbl_title.setBorder(new EmptyBorder(new Insets(5, 0, 10, 5)));
     
+    //set up label for comboboxes
     lbl_selectPermit = new JLabel("Please Enter Permit and Building");
     lbl_selectPermit.setForeground(new Color (150,20,3));
     lbl_selectPermit.setFont(new Font("Bookman Old Style", Font.BOLD, 25));
     lbl_selectPermit.setBorder(new EmptyBorder(new Insets(5, 0, 10, 5)));
     
+    //add title, combobox label, comboboxes (inputPanel) and goButton (goButtonPanel)
     upperUserPanel.add(lbl_title);
     upperUserPanel.add(Box.createRigidArea(new Dimension(0,30)));
     upperUserPanel.add(lbl_selectPermit);
     upperUserPanel.add(Box.createRigidArea(new Dimension(0,30)));
     upperUserPanel.add(inputPanel);
     upperUserPanel.add(goButtonPanel);
-    upperUserPanel.setBorder(BorderFactory.createRaisedBevelBorder());
-     
+    upperUserPanel.setBorder(BorderFactory.createRaisedBevelBorder());   
   }
   
+  /*
+   * inputPanel holds permitCombo and buildingCombo
+   * 
+   */ 
   public void createInputPanel(){
+    //initialize inputPanel
     inputPanel = new JPanel();
     inputPanel.setPreferredSize(new Dimension (450,90));
-    inputPanel.setBackground(new Color (224,224,224));
+    inputPanel.setBackground(LIGHT_GREY);
+    
+    //add components
     inputPanel.add(permitCombo);
     inputPanel.add(Box.createRigidArea(new Dimension(9,0)));
     inputPanel.add(buildingCombo);
   }
-  
-  
+  /*
+   * goButtonPanel holds the findLot button
+   */ 
   public void createGoButtonPanel(){
+    //initialize goButtonPanel
     goButtonPanel = new JPanel();
     goButtonPanel.setPreferredSize(new Dimension(445,50));
     goButtonPanel.setAlignmentX(LEFT_ALIGNMENT);
     BoxLayout boxLayout_X = new BoxLayout(goButtonPanel,BoxLayout.LINE_AXIS);
+    
+    //add components
     goButtonPanel.add(Box.createRigidArea(new Dimension(295,30)));
     goButtonPanel.add(btn_findLot);
-    goButtonPanel.setBackground(new Color (224,224,224));
+    goButtonPanel.setBackground(LIGHT_GREY);
   }
-  
+  /*
+   * ButtonPanel holds firstButtonPanel, secondButtonPanel, and thirdButtonPanel
+   * 
+   */ 
   public void createButtonPanel(){
+    //initialize buttonPanel
     buttonPanel = new JPanel();
     buttonPanel.setPreferredSize(new Dimension(500,350));
-    buttonPanel.setBackground(new Color (224,224,224));
+    buttonPanel.setBackground(LIGHT_GREY);
     
+    //build subpanels
     createFirstLotButtonPanel();
     createSecondLotButtonPanel();
     createThirdLotButtonPanel();
     
+    //add components
     buttonPanel.add(firstButtonPanel);
     buttonPanel.add(secondButtonPanel);
     buttonPanel.add(thirdButtonPanel);
   }
   
+  /*
+   * CenterUserPanel holds the lot buttons (part of the ButtonPanel)
+   */ 
   public void createCenterUserPanel(){
+    //initialize centerUserPanel
     centerUserPanel = new JPanel();
     centerUserPanel.setPreferredSize(new Dimension(500,200));
     centerUserPanel.setBorder(BorderFactory.createLoweredBevelBorder());
-    centerUserPanel.setBackground(new Color (224,224,224));
+    centerUserPanel.setBackground(LIGHT_GREY);
+    centerUserPanel.setBorder(new EmptyBorder(new Insets(30, 0, 0, 15)));
     
+    //set up title label
     lbl_selectLot = new JLabel("Click To See Recommended Lots");
     lbl_selectLot.setForeground(new Color (0,102,0));
     lbl_selectLot.setFont(new Font("Bookman Old Style", Font.BOLD, 25));
     
-    centerUserPanel.setBorder(new EmptyBorder(new Insets(30, 0, 0, 15)));
+    //build subpanel
+    createButtonPanel();
+    
+    //add components
     centerUserPanel.add(lbl_selectLot);
     centerUserPanel.add(Box.createRigidArea(new Dimension(0,5)));
-    
-    createButtonPanel();
-  
     centerUserPanel.add(buttonPanel);
   }
-  
+  /*
+   * create(First/Second/Third)Lot Button Panels
+   * these methods, create a panel that holds a button and a label
+   * the panels created by these methods are added to the buttonPanel
+   * 
+   */ 
   public void createFirstLotButtonPanel(){
+    //initialize firstButtonPanel
     firstButtonPanel = new JPanel();
     firstButtonPanel.setPreferredSize(new Dimension (450,60));
-    firstButtonPanel.setBackground(new Color (224,224,224));
+    firstButtonPanel.setBackground(LIGHT_GREY);
     
+    //create button label
     JLabel lbl_firstLot = new JLabel("Closest Lot");
     lbl_firstLot.setFont(new Font("Bookman Old Style", Font.BOLD, 20));
-    
-    
-    firstButtonPanel.add(lbl_firstLot);
+
+    //fix label and button to fit panel size
     lbl_firstLot.setPreferredSize(new Dimension(150,20));
     btn_firstLot.setPreferredSize(new Dimension(250,50));
-    
+        
+    //add components
+    firstButtonPanel.add(lbl_firstLot);
     firstButtonPanel.add(btn_firstLot);
     
   }
   
   public void createSecondLotButtonPanel(){
+    //initialize secondButtonPanel
     secondButtonPanel = new JPanel();
     secondButtonPanel.setPreferredSize(new Dimension (450,60));
-    secondButtonPanel.setBackground(new Color (224,224,224));
+    secondButtonPanel.setBackground(LIGHT_GREY);
     
+    //create button label
     JLabel lbl_secondLot = new JLabel("2nd Closest");
     lbl_secondLot.setFont(new Font("Bookman Old Style", Font.BOLD, 20));
     
-    
-    secondButtonPanel.add(lbl_secondLot);
+    //fix label and button to fit panel size
     lbl_secondLot.setPreferredSize(new Dimension(150,20));
     btn_secondLot.setPreferredSize(new Dimension(250,50));
     
+    //add components
+    secondButtonPanel.add(lbl_secondLot);
     secondButtonPanel.add(btn_secondLot);
 
   }
   
   public void createThirdLotButtonPanel(){
+    //initialize thirdButtonPanel
     thirdButtonPanel = new JPanel();
     thirdButtonPanel.setPreferredSize(new Dimension (450,60));
-    thirdButtonPanel.setBackground(new Color (224,224,224));
+    thirdButtonPanel.setBackground(LIGHT_GREY);
     
+    //create button label
     JLabel lbl_thirdLot = new JLabel("3rd Closest");
     lbl_thirdLot.setFont(new Font("Bookman Old Style", Font.BOLD, 20));
     
-    
-    thirdButtonPanel.add(lbl_thirdLot);
+    //fix label and button to fit panel size
     lbl_thirdLot.setPreferredSize(new Dimension(150,20));
     btn_thirdLot.setPreferredSize(new Dimension(250,50));
     
+    //add components
+    thirdButtonPanel.add(lbl_thirdLot);
     thirdButtonPanel.add(btn_thirdLot);
   }
   
-  public void createKeyInfoPanel(){
-    key_infoPanel = new JPanel();
-    key_infoPanel.setPreferredSize(new Dimension(100,5));
-    key_infoPanel.setLayout(new GridLayout(4,3));
-    key_infoPanel.setBackground(new Color (224,224,224));
-
-    key_infoPanel.setBorder(new EmptyBorder(new Insets(50, 20, 20, 50)));
-    key_infoPanel.add(Box.createRigidArea(new Dimension(20,0)));
-    key_infoPanel.add(Box.createRigidArea(new Dimension(20,0)));
-    key_infoPanel.add(Box.createRigidArea(new Dimension(20,0)));
-    key_infoPanel.add(Box.createRigidArea(new Dimension(20,0)));
-    key_infoPanel.add(Box.createRigidArea(new Dimension(20,0)));
-    key_infoPanel.add(Box.createRigidArea(new Dimension(20,0)));
-    key_infoPanel.add(Box.createRigidArea(new Dimension(20,0)));
-    key_infoPanel.add(Box.createRigidArea(new Dimension(20,0)));
-    key_infoPanel.add(Box.createRigidArea(new Dimension(20,0)));
-    key_infoPanel.add(btn_permitInfo);
-    btn_permitInfo.setBorder(new EmptyBorder(new Insets(5, 5, 5, 5)));
-    key_infoPanel.add(Box.createRigidArea(new Dimension(20,0)));
-    key_infoPanel.add(btn_about);
-    btn_about.setBorder(new EmptyBorder(new Insets(5, 5,5, 5)));
+  public void createAboutPanel(){
+    //initialize aboutPanel
+    aboutPanel = new JPanel();
+    aboutPanel.setPreferredSize(new Dimension(100,5));
+    aboutPanel.setLayout(new GridLayout(4,3));
+    aboutPanel.setBackground(LIGHT_GREY);
+    aboutPanel.setBorder(new EmptyBorder(new Insets(50, 20, 20, 50)));
     
+    //add components
+    aboutPanel.add(Box.createRigidArea(new Dimension(20,0)));//spacing
+    aboutPanel.add(Box.createRigidArea(new Dimension(20,0)));
+    aboutPanel.add(Box.createRigidArea(new Dimension(20,0)));
+    aboutPanel.add(Box.createRigidArea(new Dimension(20,0)));
+    aboutPanel.add(Box.createRigidArea(new Dimension(20,0)));
+    aboutPanel.add(Box.createRigidArea(new Dimension(20,0)));
+    aboutPanel.add(Box.createRigidArea(new Dimension(20,0)));
+    aboutPanel.add(Box.createRigidArea(new Dimension(20,0)));
+    aboutPanel.add(Box.createRigidArea(new Dimension(20,0)));
+    aboutPanel.add(btn_permitInfo);//add permit info button
+    btn_permitInfo.setBorder(new EmptyBorder(new Insets(5, 5, 5, 5)));
+    aboutPanel.add(Box.createRigidArea(new Dimension(20,0)));
+    aboutPanel.add(btn_about); //add about info button
+    btn_about.setBorder(new EmptyBorder(new Insets(5, 5,5, 5)));
   }
   
   public void createFirstFrame(LotDistance [] ld) throws IOException{
+    //initialize fristFrame
     firstFrame = new JFrame("Closest Lot");
     firstFrame.setSize(3000,3000);
     firstFrame.setLocationRelativeTo(null);
    
-    // will all permit types have at least 3 associated lots?
-    String first_lot_name = ld[0].getName();
+    String first_lot_name = ld[0].getName();//get first lot name
     
+    //set up first map panel
     first_map_Panel = new JPanel();
     BufferedImage image2 = ImageIO.read(new File(getLotImage(first_lot_name)));
     JLabel label2 = new JLabel(new ImageIcon(image2));
     first_map_Panel.add(label2);
+    
+    //add components
     firstFrame.add(first_map_Panel);
     firstFrame.pack();
-    
   } 
 
   public void createSecondFrame(LotDistance [] ld) throws IOException{
+    //initialize secondFrame
     secondFrame = new JFrame("Second Closest Lot");
     secondFrame.setSize(3000,3000);
     secondFrame.setLocationRelativeTo(null);
    
-    // will all permit types have at least 3 associated lots?
-    String sec_lot_name = ld[1].getName();
+    String sec_lot_name = ld[1].getName();//get second lot name
     
+    //set up second map panel
     second_map_Panel = new JPanel();
     BufferedImage image3 = ImageIO.read(new File(getLotImage(sec_lot_name)));
     JLabel label3 = new JLabel(new ImageIcon(image3));
     second_map_Panel.add(label3);
+    
+    //add components
     secondFrame.add(second_map_Panel);
     secondFrame.pack();
     
   }
   
   public void createThirdFrame(LotDistance [] ld) throws IOException {
+    //initialize thirdFrame
     thirdFrame = new JFrame("Third Closest Lot");
     thirdFrame.setSize(3000,3000);
     thirdFrame.setLocationRelativeTo(null);
-   
-    // will all permit types have at least 3 associated lots?
-    String third_lot_name = ld[2].getName();
+
+    String third_lot_name = ld[2].getName(); //get third lot name
     
+    //set up third map panel
     third_map_Panel = new JPanel();
     BufferedImage image4 = ImageIO.read(new File(getLotImage(third_lot_name)));
     JLabel label4 = new JLabel(new ImageIcon(image4));
     third_map_Panel.add(label4);
+    
+    //add components
     thirdFrame.add(third_map_Panel);
     thirdFrame.pack();
     
@@ -426,7 +502,34 @@ public class Display extends JFrame{
      return "assets/mapOfFairfaxCampus.png";  
   } 
 
-
+  public void createAboutFrame(){
+    //initialize aboutFrame
+    aboutFrame = new JFrame("About Smart Parking");
+    aboutFrame.setSize(1000,1000);
+    aboutFrame.setLocationRelativeTo(null);
+    aboutFrame.setBackground(Color.WHITE);
+    //aboutFrame.setResizable(false);
+    
+    aboutInfoPanel = new JPanel();
+    aboutInfoPanel.setPreferredSize(new Dimension(1000,1000));
+    
+    String text = ("<html><h1 align = 'center'> About Smart Parking </h1>");
+    text = text + " <George Mason parking can be a pain." +
+                                  "Have you ever been late to your first class "+ 
+                                "because you weren’t sure which parking lot to use? \n" + 
+                               "With a myriad of parking options, finding the right lot" + 
+                               "can be a daunting task. \nThis is where Smart Parking can " + 
+                               "come in to save the day. \nWe will find you the best " + 
+                               "parking location to get you to class fast. \n" + 
+                               "No more will you be late to class trying to " + 
+                                 "figure out where to park.</p> </html>";
+    lbl_aboutText = new JLabel();
+    lbl_aboutText.setText(text);
+    lbl_aboutText.setFont(new Font("Bookman Old Style", Font.BOLD, 50));
+    aboutInfoPanel.add(lbl_aboutText);
+    aboutFrame.add(aboutInfoPanel);
+    aboutFrame.setVisible(true);
+  }
   public void createPermitInfoFrame() throws IOException{
     permitFrame = new JFrame("Display Permit Information");//to display permit information
     permitFrame.setSize(1400,1400);
@@ -478,10 +581,12 @@ public class Display extends JFrame{
   public void displayPermitInfo(String givenName){
     
     try{
+      //get new image
       permitImage = ImageIO.read(new File(getPermitImage(givenName)));
       JLabel label = new JLabel(new ImageIcon(permitImage));
       label.setBorder(BorderFactory.createRaisedBevelBorder());
-      System.out.print(getPermitImage(givenName));
+      
+      //replace previous image on panel with new image
       displayPermitPanel.removeAll();
       displayPermitPanel.revalidate();
       displayPermitPanel.repaint();
@@ -492,10 +597,9 @@ public class Display extends JFrame{
     catch(IOException e){
       System.out.print("Cannot display image");
     }
-
   }
   
-  
+  //Helper method: gets image name based on given permit name
   public String getPermitImage(String permitName){
     if (permitName.equals("West Campus") || permitName.equals("Lot M & P Permit") ||
         permitName.equals("General") || permitName.equals("Resident Student Annual Lite")){
@@ -512,7 +616,7 @@ public class Display extends JFrame{
       return "assets/FFX_Student_Reserved_Deck.png";
     }
     
-    else if(permitName.equals("Lot J") || permitName.equals("Lot I")|| permitName.equals("Lot R")) { //change to Permit
+    else if(permitName.equals("Lot J Permit") || permitName.equals("Lot I Permit")|| permitName.equals("Lot R Permit")) { //change to Permit
       return "assets/FFX_Reserved_Surface_Lot-l2.png";
     }
     else if (permitName.equals("Mason Pond F/S Annual") ||
@@ -523,16 +627,23 @@ public class Display extends JFrame{
     return null; 
   }
   
-
+  /*
+   * createCombos creates all combos for the mainFrame and permitFrame
+   * combos: 
+   * For Input Panel - permitCombo, building Combo
+   * For Permit Frame - selectPermitCombo
+   * 
+  */ 
   public void createCombos(){
-    //create combo boxes
     
-    // commented lines: stores selected permit and building values 
     // selected_permit and selected_building used to check if the user selected both the permit and the building 
+    
+    //initialize permitCombo--------------------------------------------------
     permitCombo = new JComboBox<String>(permitList);
     permitCombo.setFont(new Font("Arial", Font.BOLD, 20));
-    permitCombo.setSelectedIndex(0);
+    permitCombo.setSelectedIndex(0);//set value to "Select Permit Type"
     
+    //combo action - set inputted_permit to selected value, set selected_permit to true if user has selected a value
     permitCombo.addActionListener(
       new ActionListener(){
       @Override
@@ -541,8 +652,8 @@ public class Display extends JFrame{
 
             String command = e.getActionCommand();
             if ("comboBoxChanged".equals(command)) {
-                    inputted_permit = (String) permitCombo.getSelectedItem();
-                    if(inputted_permit.equals("Select Permit Type")){
+                    inputted_permit = (String) permitCombo.getSelectedItem();//get selection
+                    if(inputted_permit.equals("Select Permit Type")){//check that selection is valid
                       selected_permit = false;
                     }
                     else{
@@ -550,11 +661,14 @@ public class Display extends JFrame{
                     }
             }
       }
-      
     });
+    
+    //initialize builidngCombo-------------------------------------------------
     buildingCombo = new JComboBox<String>(buildingList);
     buildingCombo.setFont(new Font("Arial", Font.BOLD, 20));
-    buildingCombo.setSelectedIndex(0);
+    buildingCombo.setSelectedIndex(0); //set value to "Select Building"
+    
+     //combo action - set inputted_building to selected value, set selected_ building to true if user has selected a value
     buildingCombo.addActionListener(
       new ActionListener(){
       @Override
@@ -563,8 +677,8 @@ public class Display extends JFrame{
 
             String command = e.getActionCommand();
             if ("comboBoxChanged".equals(command)) {
-                    inputted_building = (String) buildingCombo.getSelectedItem();
-                    if(inputted_building.equals("Select Building")){
+                    inputted_building = (String) buildingCombo.getSelectedItem();//get selection
+                    if(inputted_building.equals("Select Building")){//check that selection is valid
                       selected_building = false;
                     }
                     else{
@@ -575,10 +689,12 @@ public class Display extends JFrame{
       
     });
     
+    //initialize selectPermitCombo-------------------------------------------
     selectPermitCombo = new JComboBox<String>(permitList);
-    selectPermitCombo.setFont(new Font("Arial", Font.BOLD, 20));
+    selectPermitCombo.setFont(new Font("Arial", Font.BOLD, 25));
     selectPermitCombo.setSelectedIndex(0);
     
+     //combo action - set permitName to selected value, set canDisplay to true if user has selected a value
     selectPermitCombo.addActionListener(
       new ActionListener(){
       @Override
@@ -587,9 +703,8 @@ public class Display extends JFrame{
 
             String command = e.getActionCommand();
             if ("comboBoxChanged".equals(command)) {
-                    permitName = (String) selectPermitCombo.getSelectedItem();
-                    System.out.print("Permit Name" + permitName);
-                    if(permitName.equals("Select Permit Type")){
+                    permitName = (String) selectPermitCombo.getSelectedItem();//get user selection
+                    if(permitName.equals("Select Permit Type")){//check that selection is valid
                       canDisplay = false;
                     }
                     else{
@@ -601,16 +716,24 @@ public class Display extends JFrame{
     
 
   }
+  /*
+   * createButtons creates all buttons for the mainFrame and permitFrame
+   * buttons: 
+   * For goButton Panel - btn_findPermit
+   * For Button Panel - btn_firstLot, btn_secondLot, btn_thirdLot
+   * For About Panel - btn_permitInfo, btn_about
+   * For Permit Frame - btn_goToPermit
+   * 
+   */ 
   public void createButtons() throws IOException{
-    //create buttons 
+    //initialize btn_firstLot------------------------------------------------
     btn_firstLot = new JButton("#1 Lot");
     btn_firstLot.setBorder(BorderFactory.createBevelBorder(0));
     btn_firstLot.setFont(new Font("Arial", Font.BOLD, 35));
-    //btn_firstLot.setBackground(new Color (0,182,0,155));
-    btn_firstLot.setForeground(Color.BLACK);
     btn_firstLot.setBorder(BorderFactory.createRaisedBevelBorder());
-    //btn_firstLot.setBackground(Color.GREEN);
-    btn_firstLot.setEnabled(false);
+    btn_firstLot.setEnabled(false);//not clickable until btn_findLot is clicked
+    
+    //button action - display first lot frame
     btn_firstLot.addActionListener(new ActionListener(){
       @Override
       public void actionPerformed(ActionEvent arg0){
@@ -619,64 +742,74 @@ public class Display extends JFrame{
       
     }); 
     
+    //initialize btn_secondLot------------------------------------------------
     btn_secondLot = new JButton("#2 Lot");
-    //btn_secondLot.setBackground(Color.YELLOW);
     btn_secondLot.setFont(new Font("Arial", Font.BOLD, 35));
     btn_secondLot.setBorder(BorderFactory.createBevelBorder(0));
     btn_secondLot.setEnabled(false);
+    
+    //button action - display second lot frame
     btn_secondLot.addActionListener(new ActionListener(){
       @Override
       public void actionPerformed(ActionEvent arg0){
         secondFrame.setVisible(true);
       }
-      
     });
     
+    //initialize btn_thirdLot--------------------------------------------------
     btn_thirdLot = new JButton("#3 Lot");
-    //btn_thirdLot.setBackground(Color.RED);
     btn_thirdLot.setFont(new Font("Arial", Font.BOLD, 35));
     btn_thirdLot.setBorder(BorderFactory.createBevelBorder(0));
     btn_thirdLot.setEnabled(false);
+    
+    //button action - display third lot frame
     btn_thirdLot.addActionListener(new ActionListener(){
       @Override
       public void actionPerformed(ActionEvent arg0){
         thirdFrame.setVisible(true);
       }
-      
     });
-    helpText = new JTextArea();
+    
+    helpText = new JTextArea();//help text appears at bottom of screen to display errors
+    
+    //initialize btn_findLot----------------------------------------------------
     btn_findLot = new JButton("Find Lot");
-    //btn_findLot.setBackground( new Color(100,0,0));
     btn_findLot.setFont(new Font("Arial", Font.BOLD, 25));
+    
+    //button action - calculate best lot, set lot buttons active, create lot frames
     btn_findLot.addActionListener(new ActionListener(){
       @Override
       public void actionPerformed(ActionEvent arg0) {
 
         helpText.append("Finding Best Lot ...\n");
         
-        // way to call backend?
-
+        //check that a building and permit have been selected
         if (selected_building == true && selected_permit == true) {
+           
+           //get best lot calculation
            blf.setPermit(inputted_permit);
            blf.setBuilding(inputted_building);
            LotDistance [] ld = blf.findBestLot();
            
-        //if statements in place to check how many parking lots are available (some permit types restrict to one or two parking lots)
+           //if statements in place to check how many parking lots are available 
+           //(some permit types restrict to one or two parking lots)
+           
+           //create frames and set lot buttons active
            if (ld.length >= 3) { 
+             
              try {
                createFirstFrame(ld); 
                btn_firstLot.setText(ld[0].getName());
-               btn_thirdLot.setFont(new Font("Arial", Font.BOLD, 35));
                btn_firstLot.setBackground(Color.GREEN);
                btn_firstLot.setEnabled(true);
+               
                createSecondFrame(ld);
                btn_secondLot.setText(ld[1].getName());
-               btn_thirdLot.setFont(new Font("Arial", Font.BOLD, 35));
                btn_secondLot.setBackground(Color.YELLOW);
                btn_secondLot.setEnabled(true);
+               
                createThirdFrame(ld);
                btn_thirdLot.setText(ld[2].getName());
-               btn_thirdLot.setFont(new Font("Arial", Font.BOLD, 35));
                btn_thirdLot.setBackground(Color.RED);
                btn_thirdLot.setEnabled(true);
              }
@@ -688,16 +821,15 @@ public class Display extends JFrame{
              try {
                createFirstFrame(ld); 
                btn_firstLot.setText(ld[0].getName());
-                btn_thirdLot.setFont(new Font("Arial", Font.BOLD, 35));
                btn_firstLot.setBackground(Color.GREEN);
                btn_firstLot.setEnabled(true);
+               
                createSecondFrame(ld);
                btn_secondLot.setText(ld[1].getName());
-                btn_thirdLot.setFont(new Font("Arial", Font.BOLD, 35));
                btn_secondLot.setBackground(Color.YELLOW);
                btn_secondLot.setEnabled(true); 
+               
                btn_thirdLot.setText("None");
-                btn_thirdLot.setFont(new Font("Arial", Font.BOLD, 35));
              }
              catch(IOException e) {
                System.out.println("Can't open lot image files\n");
@@ -707,15 +839,14 @@ public class Display extends JFrame{
              try {
                createFirstFrame(ld); 
                btn_firstLot.setText(ld[0].getName());
-                btn_thirdLot.setFont(new Font("Arial", Font.BOLD, 35));
                btn_firstLot.setBackground(Color.GREEN);
                btn_firstLot.setEnabled(true);
+               
                btn_secondLot.setText("None");
                btn_secondLot.setEnabled(false);
-               btn_thirdLot.setFont(new Font("Arial", Font.BOLD, 35));
+               
                btn_thirdLot.setText("None");
                btn_thirdLot.setEnabled(false);
-                btn_thirdLot.setFont(new Font("Arial", Font.BOLD, 35));
              }
              catch(IOException e) {
                System.out.println("Can't open lot image files\n");
@@ -727,21 +858,20 @@ public class Display extends JFrame{
         else if (selected_building == false && selected_permit == true){
           int answer = JOptionPane.showConfirmDialog(mainFrame, "No Building Selected. Continue with 'Johnson Center' as Building?", "Caution" ,JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
           if (answer == JOptionPane.YES_OPTION){
-            helpText.append("Using JC");
+            buildingCombo.setSelectedIndex(26);//set buildingCombo to Johnson Center
+            btn_findLot.doClick(); //click btn_findLot to perform calculations
           }
-          //else --> do nothing
-          
         }
         else{
          JOptionPane.showMessageDialog(mainFrame, "Please Select a Permit and Building to Continue");
         }
-      }
-      
+      }  
     });
-    
+    //initialize btn_permitInfo---------------------------------------------------
     btn_permitInfo = new JButton("Permit Info");
     btn_permitInfo.setFont(new Font("Arial", Font.BOLD, 22));
-    //btn_permitInfo.setBackground(new Color(225,204,51));
+    
+    //button action - create new permit info frame
     btn_permitInfo.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent arg0){
@@ -757,28 +887,32 @@ public class Display extends JFrame{
       
     });
     
+    //initialize btn_about-------------------------------------------------------
     btn_about = new JButton("About");
     btn_about.setFont(new Font("Arial", Font.BOLD, 22));
-    //btn_about.setBackground(new Color(225,204,51));
+    
+    //button action - create about frame
     btn_about.addActionListener(new ActionListener(){
       @Override
       public void actionPerformed(ActionEvent arg0){
         helpText.append("Displaying About Info ...\n");
-        //createPermitInfoFrames();
+        createAboutFrame();
         mainFrame.pack();
       }
-      
     });
     
+    //initialize btn_goToPermit, button located on Permit Frame-------------------
     btn_goToPermit = new JButton("Get Info");
     btn_goToPermit.setBorder(BorderFactory.createBevelBorder(0));
     btn_goToPermit.setFont(new Font("Arial", Font.BOLD, 35));
     btn_goToPermit.setForeground(Color.BLACK);
+    
+    //button action - call displayPermitInfo() (change the image based on the permit name)
     btn_goToPermit.addActionListener(new ActionListener(){
       @Override
       public void actionPerformed(ActionEvent arg0){
         //get permit combo info
-        if (canDisplay = true){
+        if (canDisplay = true){//check that a permit has been selected in the combo box
           displayPermitInfo(permitName);
         }
         else{
@@ -787,7 +921,6 @@ public class Display extends JFrame{
       }
       
     });
-    
-    
   }
+  
 }
