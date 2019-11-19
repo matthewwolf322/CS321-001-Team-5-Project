@@ -491,7 +491,7 @@ public class Display extends JFrame{
     }
     
     else if(lot_dist_name.equals("Lot M") || lot_dist_name.equals("Lot O") ||
-            lot_dist_name.equals("Lot P") || lot_dist_name.equals("Lot PV") ||
+            lot_dist_name.equals("Lot P") || lot_dist_name.equals("PV Lot") ||
             lot_dist_name.equals("Lot I")) {
       return "assets/mapOfFairfaxCampus-POMPVI-l.png";
     } 
@@ -500,7 +500,7 @@ public class Display extends JFrame{
       return "assets/mapOfFairfaxCampus-DRRPD-l.png";
     }
     
-    else if(lot_dist_name.equals("Lot R") || lot_dist_name.equals("Mason Pond Deck") || lot_dist_name.equals("Shenandoah Parking Deck")) {
+    else if(lot_dist_name.equals("Lot R") || lot_dist_name.equals("Mason Pond Deck") || lot_dist_name.equals("Shenandoah Deck")) { // make shenandoah deck
       return "assets/mapOfFairfaxCampus-RMasonPondShenndoah-l.png";
     }
     else if(lot_dist_name.equals("West Campus Lot")) {
@@ -622,11 +622,11 @@ public class Display extends JFrame{
       return "assets/FFX_Student_Reserved_Deck.png";
     }
     
-    else if(permitName.equals("Lot J Permit") || permitName.equals("Lot I Permit")|| permitName.equals("Lot R Permit")) { //change to Permit
+    else if(permitName.equals("Lot J Permit") || permitName.equals("Lot I Permit")|| permitName.equals("Lot R Permit")) { 
       return "assets/FFX_Reserved_Surface_Lot-l2.png";
     }
     else if (permitName.equals("Mason Pond F/S Annual") ||
-        permitName.equals("Shenandoah F/S Annual") || permitName.equals("RRPD F/S Annual")|| permitName.equals("RRPD Roof Only F/S")){
+        permitName.equals("Shenandoah F/S Annual") || permitName.equals("RRPD F/S Annual")|| permitName.equals("RRPD Roof Only F/S Annual")){ // add annual
       return "assets/FFX_Faculty_Staff_Reserved_Deck-l.png";
     } 
     
