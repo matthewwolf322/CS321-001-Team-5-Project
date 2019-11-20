@@ -118,7 +118,7 @@ public class introMessage extends JPanel{
     frame.setVisible(true);
     frame.requestFocus();
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    
+    frame.setAlwaysOnTop(true);
   }
   
   public void run(){

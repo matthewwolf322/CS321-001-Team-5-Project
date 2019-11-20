@@ -106,7 +106,8 @@ public class Display extends JFrame{
   private JFrame permitFrame;//to display permit information
   private JPanel permitTitlePanel;//to display title for permit frame
   private JPanel findPermitPanel;//to get permit name
-  private JPanel displayPermitPanel = new JPanel();;//displays
+  private JPanel displayPermitPanel; //= new JPanel();//displays
+  private boolean permitFrameIsOpen = false;
   
   private JLabel lbl_permit_title;
   private JComboBox<String> selectPermitCombo; //for permit info panel
@@ -120,6 +121,7 @@ public class Display extends JFrame{
   private JFrame aboutFrame;
   private JPanel aboutInfoPanel;
   private JLabel lbl_aboutText;
+  private boolean aboutFrameIsOpen = false;
   
   /*
    * Display creates a new BestLotFinder Object and creates GUI
@@ -305,7 +307,9 @@ public class Display extends JFrame{
     
     //add components
     buttonPanel.add(firstButtonPanel);
+    buttonPanel.add(Box.createRigidArea(new Dimension(500,10)));
     buttonPanel.add(secondButtonPanel);
+    buttonPanel.add(Box.createRigidArea(new Dimension(500,10)));
     buttonPanel.add(thirdButtonPanel);
   }
   
@@ -318,10 +322,11 @@ public class Display extends JFrame{
     centerUserPanel.setPreferredSize(new Dimension(500,200));
     centerUserPanel.setBorder(BorderFactory.createLoweredBevelBorder());
     centerUserPanel.setBackground(LIGHT_GREY);
-    centerUserPanel.setBorder(new EmptyBorder(new Insets(30, 0, 0, 15)));
+    centerUserPanel.setBorder(new EmptyBorder(new Insets(29, 0, 0, 15)));
     
     //set up title label
-    lbl_selectLot = new JLabel("Click To See Recommended Lots");
+    lbl_selectLot = new JLabel(" Click Buttons To View The Best Lots",SwingConstants.CENTER );
+    lbl_selectLot.setPreferredSize(new Dimension(495,20));
     lbl_selectLot.setForeground(new Color (0,102,0));
     lbl_selectLot.setFont(new Font("Bookman Old Style", Font.BOLD, 25));
     
@@ -330,7 +335,7 @@ public class Display extends JFrame{
     
     //add components
     centerUserPanel.add(lbl_selectLot);
-    centerUserPanel.add(Box.createRigidArea(new Dimension(0,5)));
+    centerUserPanel.add(Box.createRigidArea(new Dimension(495,20)));
     centerUserPanel.add(buttonPanel);
   }
   /*
@@ -404,7 +409,7 @@ public class Display extends JFrame{
     aboutPanel.setPreferredSize(new Dimension(100,5));
     aboutPanel.setLayout(new GridLayout(4,3));
     aboutPanel.setBackground(LIGHT_GREY);
-    aboutPanel.setBorder(new EmptyBorder(new Insets(50, 20, 20, 50)));
+    aboutPanel.setBorder(new EmptyBorder(new Insets(56, 20, 20, 50)));
     
     //add components
     aboutPanel.add(Box.createRigidArea(new Dimension(20,0)));//spacing
@@ -417,14 +422,14 @@ public class Display extends JFrame{
     aboutPanel.add(Box.createRigidArea(new Dimension(20,0)));
     aboutPanel.add(Box.createRigidArea(new Dimension(20,0)));
     aboutPanel.add(btn_permitInfo);//add permit info button
-    btn_permitInfo.setBorder(new EmptyBorder(new Insets(5, 5, 5, 5)));
+    btn_permitInfo.setBorder(new EmptyBorder(new Insets(10, 5, 5, 5)));
     aboutPanel.add(Box.createRigidArea(new Dimension(20,0)));
     aboutPanel.add(btn_about); //add about info button
     btn_about.setBorder(new EmptyBorder(new Insets(5, 5,5, 5)));
   }
   
   public void createFirstFrame(LotDistance [] ld) throws IOException{
-    //initialize fristFrame
+    //initialize firstFrame
     firstFrame = new JFrame("Closest Lot");
     firstFrame.setSize(3000,3000);
     firstFrame.setLocationRelativeTo(null);
@@ -491,7 +496,7 @@ public class Display extends JFrame{
     }
     
     else if(lot_dist_name.equals("Lot M") || lot_dist_name.equals("Lot O") ||
-            lot_dist_name.equals("Lot P") || lot_dist_name.equals("PV Lot") ||
+            lot_dist_name.equals("Lot P") || lot_dist_name.equals("Lot PV") ||
             lot_dist_name.equals("Lot I")) {
       return "assets/mapOfFairfaxCampus-POMPVI-l.png";
     } 
@@ -500,7 +505,7 @@ public class Display extends JFrame{
       return "assets/mapOfFairfaxCampus-DRRPD-l.png";
     }
     
-    else if(lot_dist_name.equals("Lot R") || lot_dist_name.equals("Mason Pond Deck") || lot_dist_name.equals("Shenandoah Deck")) { // make shenandoah deck
+    else if(lot_dist_name.equals("Lot R") || lot_dist_name.equals("Mason Pond Deck") || lot_dist_name.equals("Shenandoah Parking Deck")) {
       return "assets/mapOfFairfaxCampus-RMasonPondShenndoah-l.png";
     }
     else if(lot_dist_name.equals("West Campus Lot")) {
@@ -514,15 +519,29 @@ public class Display extends JFrame{
     aboutFrame = new JFrame("About Smart Parking");
     aboutFrame.setSize(1000,1000);
     aboutFrame.setLocationRelativeTo(null);
-    aboutFrame.setBackground(Color.WHITE);
+    
+    aboutFrame.addWindowListener(new WindowAdapter(){
+      @Override
+      public void windowClosing(WindowEvent windowEvent){
+        aboutFrameIsOpen = false;
+      }
+    });
+
     //aboutFrame.setResizable(false);
+    JPanel topColorPanel = new JPanel();
+    topColorPanel.setPreferredSize(new Dimension(1000,60));
+    topColorPanel.setLayout(new GridLayout(1,5));
+    topColorPanel.setBackground(new Color(1,68,33));
     
     aboutInfoPanel = new JPanel();
-    aboutInfoPanel.setPreferredSize(new Dimension(1000,1000));
     
-    String text = ("<html><h1 align = 'center'> About Smart Parking </h1>");
-    text = text + " <George Mason parking can be a pain." +
-                                  "Have you ever been late to your first class "+ 
+    aboutInfoPanel.setBackground(new Color (255,255,255));
+    aboutInfoPanel.setPreferredSize(new Dimension(1000,1000));
+    String txt_title = ("About Smart Parking");
+    //String txt_title = ("<html><h1 style = colour: white; text-align:'left';> <strong>About Smart Parking</strong> </h1>");
+    String txt_about = ("<html><h1 style = text-align: 'center';> Developers: Team 5 </h1>");
+    /*text = text + " <George Mason parking can be a pain." +
+                                 // "Have you ever been late to your first class "+ 
                                 "because you weren’t sure which parking lot to use? \n" + 
                                "With a myriad of parking options, finding the right lot" + 
                                "can be a daunting task. \nThis is where Smart Parking can " + 
@@ -530,12 +549,25 @@ public class Display extends JFrame{
                                "parking location to get you to class fast. \n" + 
                                "No more will you be late to class trying to " + 
                                  "figure out where to park.</p> </html>";
+    */
+    JLabel lbl_aboutPageTitle = new JLabel(txt_title);
+    lbl_aboutPageTitle.setFont(new Font("Bookman Old Style", Font.BOLD, 50));
+    lbl_aboutPageTitle.setForeground(new Color (255,165,0));
+    lbl_aboutPageTitle.setBorder(new EmptyBorder(new Insets(10, 2, 2, 10)));
+    topColorPanel.add(lbl_aboutPageTitle);
+    String txt_all = txt_about;
+    
+    
     lbl_aboutText = new JLabel();
-    lbl_aboutText.setText(text);
+    lbl_aboutText.setText(txt_all);
     lbl_aboutText.setFont(new Font("Bookman Old Style", Font.BOLD, 50));
+    //lbl_aboutText.setForeground(Color.WHITE);
     aboutInfoPanel.add(lbl_aboutText);
+    aboutFrame.add(topColorPanel, BorderLayout.NORTH);
     aboutFrame.add(aboutInfoPanel);
+    aboutFrame.repaint();
     aboutFrame.setVisible(true);
+    aboutFrameIsOpen = true;
   }
   public void createPermitInfoFrame() throws IOException{
     permitFrame = new JFrame("Display Permit Information");//to display permit information
@@ -543,6 +575,12 @@ public class Display extends JFrame{
     permitFrame.setLocationRelativeTo(null);
     permitFrame.setResizable(false);
     
+      permitFrame.addWindowListener( new WindowAdapter(){
+      @Override
+      public void windowClosing(WindowEvent windowEvent){
+        permitFrameIsOpen = false;
+      }
+      });
     permitTitlePanel = new JPanel();
     permitTitlePanel.setPreferredSize(new Dimension(1400,200));
     permitTitlePanel.setBorder(new EmptyBorder(new Insets(30, 0, 0, 30)));//10
@@ -552,7 +590,7 @@ public class Display extends JFrame{
     lbl_permit_title.setPreferredSize(new Dimension(1400,110));
     lbl_permit_title.setBorder(new EmptyBorder(new Insets(0, 10, 20, 0)));
     lbl_permit_title.setFont(new Font("Bookman Old Style", Font.BOLD, 50));
-    lbl_permit_title.setForeground( new Color (255,165,0));
+    lbl_permit_title.setForeground( new Color (255,165,0));//gold
     
     permitTitlePanel.add(lbl_permit_title);
     
@@ -569,6 +607,7 @@ public class Display extends JFrame{
     permitTitlePanel.add(findPermitPanel);
     
     //displays
+    displayPermitPanel = new JPanel();
     displayPermitPanel.setPreferredSize(new Dimension(200,100));
     displayPermitPanel.setBorder(new EmptyBorder(new Insets(30, 0, 0, 15)));
     displayPermitPanel.setBackground(new Color (1,68,33));
@@ -581,7 +620,7 @@ public class Display extends JFrame{
     permitFrame.add(permitTitlePanel, BorderLayout.NORTH);
     permitFrame.add(displayPermitPanel);
     permitFrame.setVisible(true);
-
+    permitFrameIsOpen = true;
   }
   
   public void displayPermitInfo(String givenName){
@@ -622,11 +661,11 @@ public class Display extends JFrame{
       return "assets/FFX_Student_Reserved_Deck.png";
     }
     
-    else if(permitName.equals("Lot J Permit") || permitName.equals("Lot I Permit")|| permitName.equals("Lot R Permit")) { 
+    else if(permitName.equals("Lot J Permit") || permitName.equals("Lot I Permit")|| permitName.equals("Lot R Permit")) { //change to Permit
       return "assets/FFX_Reserved_Surface_Lot-l2.png";
     }
     else if (permitName.equals("Mason Pond F/S Annual") ||
-        permitName.equals("Shenandoah F/S Annual") || permitName.equals("RRPD F/S Annual")|| permitName.equals("RRPD Roof Only F/S Annual")){ // add annual
+        permitName.equals("Shenandoah F/S Annual") || permitName.equals("RRPD F/S Annual")|| permitName.equals("RRPD Roof Only F/S")){
       return "assets/FFX_Faculty_Staff_Reserved_Deck-l.png";
     } 
     
@@ -789,8 +828,9 @@ public class Display extends JFrame{
     btn_findLot.addActionListener(new ActionListener(){
       @Override
       public void actionPerformed(ActionEvent arg0) {
-
-        helpText.append("Finding Best Lot ...\n");
+        //helpText.removeAll();
+        //helpText.setForeground(Color.RED);
+        //helpText.append("Smart Parking determines best lots used on we");
         
         //check that a building and permit have been selected
         if (selected_building == true && selected_permit == true) {
@@ -877,16 +917,21 @@ public class Display extends JFrame{
       }  
     });
     //initialize btn_permitInfo---------------------------------------------------
-    btn_permitInfo = new JButton("Permit Info");
+    btn_permitInfo = new JButton("Permits");
     btn_permitInfo.setFont(new Font("Arial", Font.BOLD, 22));
     
     //button action - create new permit info frame
     btn_permitInfo.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent arg0){
-        helpText.append("Displaying Permit Info ...\n");
+        //helpText.append("Displaying Permit Info ...\n");
         try{
-          createPermitInfoFrame();
+          if(permitFrameIsOpen == false){
+            createPermitInfoFrame();
+          }
+          else{
+            JOptionPane.showMessageDialog(mainFrame, "Permit Informaiton Page Already Open");
+          }
         }
         catch(IOException e){
           e.printStackTrace();
@@ -904,9 +949,13 @@ public class Display extends JFrame{
     btn_about.addActionListener(new ActionListener(){
       @Override
       public void actionPerformed(ActionEvent arg0){
-        helpText.append("Displaying About Info ...\n");
-        createAboutFrame();
-        mainFrame.pack();
+        //helpText.append("Displaying About Info ...\n");
+        if(aboutFrameIsOpen == false){
+            createAboutFrame();
+          }
+          else{
+            JOptionPane.showMessageDialog(mainFrame, "About Page Already Open");
+          }
       }
     });
     
