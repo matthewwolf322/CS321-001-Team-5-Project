@@ -1,0 +1,11 @@
+Sources: 
+
+Coordinates of Parking Lots and Buildings on the Fairfax GMU Campus (used for calculations) were collected from Google Maps.
+
+GMU Fairfax Campus Map (includes Fall 2019 construction sites) from: https://info.gmu.edu/wp-content/uploads/FairfaxMap_2019.pdf  
+
+Permit Description Images for Fall 2019 from "Valid Lot/Garages by Permit Type" at: 
+
+https://transportation.gmu.edu/parking-services/student/ 
+
+https://transportation.gmu.edu/parking-services/faculty-staff/  
