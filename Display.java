@@ -517,7 +517,7 @@ public class Display extends JFrame{
   public void createAboutFrame() throws IOException{
     //initialize aboutFrame
     aboutFrame = new JFrame("About Smart Parking");
-    aboutFrame.setSize(1000,500);
+    aboutFrame.setSize(1000,1000);
     aboutFrame.setLocationRelativeTo(null);
     
     aboutFrame.addWindowListener(new WindowAdapter(){
@@ -527,13 +527,8 @@ public class Display extends JFrame{
       }
     });
 
-    //aboutFrame.setResizable(false);
     JPanel topColorPanel = new JPanel();
     topColorPanel.setPreferredSize(new Dimension(1000,70));
-    //topColorPanel.setLayout(new GridLayout(1,5));
-    //topColorPanel.setAlignmentX(CENTER_ALIGNMENT);
-    //BoxLayout boxLayout_X = new BoxLayout(topColorPanel,BoxLayout.LINE_AXIS);
-    //topColorPanel.setLayout(boxLayout_X);
     topColorPanel.setBackground(new Color(1,68,33));
     
     aboutInfoPanel = new JPanel();
@@ -541,7 +536,6 @@ public class Display extends JFrame{
     aboutInfoPanel.setBackground(new Color (255,255,255));
     aboutInfoPanel.setPreferredSize(new Dimension(1000,1000));
     String txt_title = ("About Smart Parking");
-    //String txt_about = ("<html><h1 style = text-align: 'center';> Developers: Team 5 </h1>");
 
     BufferedImage aboutInfoImage = ImageIO.read(new File("assets/about_smart_parking.png"));
     JLabel label_i = new JLabel(new ImageIcon(aboutInfoImage));
@@ -831,9 +825,6 @@ public class Display extends JFrame{
     btn_findLot.addActionListener(new ActionListener(){
       @Override
       public void actionPerformed(ActionEvent arg0) {
-        //helpText.removeAll();
-        //helpText.setForeground(Color.RED);
-        //helpText.append("Smart Parking determines best lots used on we");
         
         //check that a building and permit have been selected
         if (selected_building == true && selected_permit == true) {
@@ -862,7 +853,7 @@ public class Display extends JFrame{
                
                createThirdFrame(ld);
                btn_thirdLot.setText(ld[2].getName());
-               btn_thirdLot.setBackground(Color.RED);
+               btn_thirdLot.setBackground(Color.ORANGE);
                btn_thirdLot.setEnabled(true);
              }
              catch(IOException e) {
