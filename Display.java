@@ -514,7 +514,7 @@ public class Display extends JFrame{
      return "assets/mapOfFairfaxCampus.png";  
   } 
 
-  public void createAboutFrame(){
+  public void createAboutFrame() throws IOException{
     //initialize aboutFrame
     aboutFrame = new JFrame("About Smart Parking");
     aboutFrame.setSize(1000,1000);
@@ -529,8 +529,11 @@ public class Display extends JFrame{
 
     //aboutFrame.setResizable(false);
     JPanel topColorPanel = new JPanel();
-    topColorPanel.setPreferredSize(new Dimension(1000,60));
-    topColorPanel.setLayout(new GridLayout(1,5));
+    topColorPanel.setPreferredSize(new Dimension(1000,70));
+    //topColorPanel.setLayout(new GridLayout(1,5));
+    //topColorPanel.setAlignmentX(CENTER_ALIGNMENT);
+    //BoxLayout boxLayout_X = new BoxLayout(topColorPanel,BoxLayout.LINE_AXIS);
+    //topColorPanel.setLayout(boxLayout_X);
     topColorPanel.setBackground(new Color(1,68,33));
     
     aboutInfoPanel = new JPanel();
@@ -538,31 +541,19 @@ public class Display extends JFrame{
     aboutInfoPanel.setBackground(new Color (255,255,255));
     aboutInfoPanel.setPreferredSize(new Dimension(1000,1000));
     String txt_title = ("About Smart Parking");
-    //String txt_title = ("<html><h1 style = colour: white; text-align:'left';> <strong>About Smart Parking</strong> </h1>");
-    String txt_about = ("<html><h1 style = text-align: 'center';> Developers: Team 5 </h1>");
-    /*text = text + " <George Mason parking can be a pain." +
-                                 // "Have you ever been late to your first class "+ 
-                                "because you weren’t sure which parking lot to use? \n" + 
-                               "With a myriad of parking options, finding the right lot" + 
-                               "can be a daunting task. \nThis is where Smart Parking can " + 
-                               "come in to save the day. \nWe will find you the best " + 
-                               "parking location to get you to class fast. \n" + 
-                               "No more will you be late to class trying to " + 
-                                 "figure out where to park.</p> </html>";
-    */
+    //String txt_about = ("<html><h1 style = text-align: 'center';> Developers: Team 5 </h1>");
+
+    BufferedImage aboutInfoImage = ImageIO.read(new File("assets/about_smart_parking.png"));
+    JLabel label_i = new JLabel(new ImageIcon(aboutInfoImage));
     JLabel lbl_aboutPageTitle = new JLabel(txt_title);
+    aboutInfoPanel.add(label_i);
+    aboutInfoPanel.setBackground(Color.WHITE);
+    
     lbl_aboutPageTitle.setFont(new Font("Bookman Old Style", Font.BOLD, 50));
     lbl_aboutPageTitle.setForeground(new Color (255,165,0));
-    lbl_aboutPageTitle.setBorder(new EmptyBorder(new Insets(10, 2, 2, 10)));
+    lbl_aboutPageTitle.setBorder(new EmptyBorder(new Insets(0, 20, 0, 0)));
     topColorPanel.add(lbl_aboutPageTitle);
-    String txt_all = txt_about;
-    
-    
-    lbl_aboutText = new JLabel();
-    lbl_aboutText.setText(txt_all);
-    lbl_aboutText.setFont(new Font("Bookman Old Style", Font.BOLD, 50));
-    //lbl_aboutText.setForeground(Color.WHITE);
-    aboutInfoPanel.add(lbl_aboutText);
+
     aboutFrame.add(topColorPanel, BorderLayout.NORTH);
     aboutFrame.add(aboutInfoPanel);
     aboutFrame.repaint();
@@ -665,7 +656,7 @@ public class Display extends JFrame{
       return "assets/FFX_Reserved_Surface_Lot-l2.png";
     }
     else if (permitName.equals("Mason Pond F/S Annual") ||
-        permitName.equals("Shenandoah F/S Annual") || permitName.equals("RRPD F/S Annual")|| permitName.equals("RRPD Roof Only F/S")){
+        permitName.equals("Shenandoah F/S Annual") || permitName.equals("RRPD F/S Annual")|| permitName.equals("RRPD Roof Only F/S Annual")){
       return "assets/FFX_Faculty_Staff_Reserved_Deck-l.png";
     } 
     
@@ -951,7 +942,14 @@ public class Display extends JFrame{
       public void actionPerformed(ActionEvent arg0){
         //helpText.append("Displaying About Info ...\n");
         if(aboutFrameIsOpen == false){
-            createAboutFrame();
+          try{
+            createAboutFrame();  
+          }
+          catch(IOException e){
+            e.printStackTrace();
+          }  
+          
+
           }
           else{
             JOptionPane.showMessageDialog(mainFrame, "About Page Already Open");
