@@ -496,7 +496,7 @@ public class Display extends JFrame{
     }
     
     else if(lot_dist_name.equals("Lot M") || lot_dist_name.equals("Lot O") ||
-            lot_dist_name.equals("Lot P") || lot_dist_name.equals("PV Lot") ||
+            lot_dist_name.equals("Lot P") || lot_dist_name.equals("Lot PV") ||
             lot_dist_name.equals("Lot I")) {
       return "assets/mapOfFairfaxCampus-POMPVI-l.png";
     } 
@@ -505,7 +505,7 @@ public class Display extends JFrame{
       return "assets/mapOfFairfaxCampus-DRRPD-l.png";
     }
     
-    else if(lot_dist_name.equals("Lot R") || lot_dist_name.equals("Mason Pond Deck") || lot_dist_name.equals("Shenandoah Deck")) {
+    else if(lot_dist_name.equals("Lot R") || lot_dist_name.equals("Mason Pond Deck") || lot_dist_name.equals("Shenandoah Parking Deck")) {
       return "assets/mapOfFairfaxCampus-RMasonPondShenndoah-l.png";
     }
     else if(lot_dist_name.equals("West Campus Lot")) {
@@ -882,6 +882,7 @@ public class Display extends JFrame{
                btn_secondLot.setEnabled(true); 
                
                btn_thirdLot.setText("None");
+               btn_thirdLot.setBackground(new JButton().getBackground());
              }
              catch(IOException e) {
                System.out.println("Can't open lot image files\n");
@@ -895,9 +896,11 @@ public class Display extends JFrame{
                btn_firstLot.setEnabled(true);
                
                btn_secondLot.setText("None");
+               btn_secondLot.setBackground(new JButton().getBackground());
                btn_secondLot.setEnabled(false);
                
                btn_thirdLot.setText("None");
+               btn_thirdLot.setBackground(new JButton().getBackground());
                btn_thirdLot.setEnabled(false);
              }
              catch(IOException e) {
