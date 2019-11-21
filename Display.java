@@ -517,7 +517,7 @@ public class Display extends JFrame{
   public void createAboutFrame() throws IOException{
     //initialize aboutFrame
     aboutFrame = new JFrame("About Smart Parking");
-    aboutFrame.setSize(1000,1000);
+    aboutFrame.setSize(1000,500);
     aboutFrame.setLocationRelativeTo(null);
     
     aboutFrame.addWindowListener(new WindowAdapter(){
@@ -560,7 +560,7 @@ public class Display extends JFrame{
     aboutFrame.setVisible(true);
     aboutFrameIsOpen = true;
   }
-  public void createPermitInfoFrame() throws IOException{
+  public void createPermitInfoFrame( boolean IsSelected, String permitName) throws IOException{
     permitFrame = new JFrame("Display Permit Information");//to display permit information
     permitFrame.setSize(1400,1400);
     permitFrame.setLocationRelativeTo(null);
@@ -602,7 +602,18 @@ public class Display extends JFrame{
     displayPermitPanel.setPreferredSize(new Dimension(200,100));
     displayPermitPanel.setBorder(new EmptyBorder(new Insets(30, 0, 0, 15)));
     displayPermitPanel.setBackground(new Color (1,68,33));
-    permitImage = ImageIO.read(new File("assets/George_Mason_Patriots_logo.png"));
+    if( IsSelected == true){
+      try{
+        permitImage = ImageIO.read(new File(getPermitImage(permitName)));
+      }
+      catch(IOException e){
+        permitImage = ImageIO.read(new File("assets/George_Mason_Patriots_logo.png"));
+      }
+    }
+    else
+    {
+      permitImage = ImageIO.read(new File("assets/George_Mason_Patriots_logo.png"));
+    }
     JLabel label = new JLabel(new ImageIcon(permitImage));
     //label.setBorder(BorderFactory.createRaisedBevelBorder());
     
@@ -611,6 +622,7 @@ public class Display extends JFrame{
     permitFrame.add(permitTitlePanel, BorderLayout.NORTH);
     permitFrame.add(displayPermitPanel);
     permitFrame.setVisible(true);
+    selectPermitCombo.setSelectedIndex(0);
     permitFrameIsOpen = true;
   }
   
@@ -915,10 +927,14 @@ public class Display extends JFrame{
     btn_permitInfo.addActionListener(new ActionListener() {
       @Override
       public void actionPerformed(ActionEvent arg0){
-        //helpText.append("Displaying Permit Info ...\n");
         try{
           if(permitFrameIsOpen == false){
-            createPermitInfoFrame();
+            if (selected_permit == true){
+              createPermitInfoFrame(true,inputted_permit);
+            }
+            else{
+              createPermitInfoFrame(false,null);
+            }
           }
           else{
             JOptionPane.showMessageDialog(mainFrame, "Permit Informaiton Page Already Open");
@@ -940,7 +956,6 @@ public class Display extends JFrame{
     btn_about.addActionListener(new ActionListener(){
       @Override
       public void actionPerformed(ActionEvent arg0){
-        //helpText.append("Displaying About Info ...\n");
         if(aboutFrameIsOpen == false){
           try{
             createAboutFrame();  
