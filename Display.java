@@ -496,7 +496,7 @@ public class Display extends JFrame{
     }
     
     else if(lot_dist_name.equals("Lot M") || lot_dist_name.equals("Lot O") ||
-            lot_dist_name.equals("Lot P") || lot_dist_name.equals("Lot PV") ||
+            lot_dist_name.equals("Lot P") || lot_dist_name.equals("PV Lot") ||
             lot_dist_name.equals("Lot I")) {
       return "assets/mapOfFairfaxCampus-POMPVI-l.png";
     } 
@@ -505,7 +505,7 @@ public class Display extends JFrame{
       return "assets/mapOfFairfaxCampus-DRRPD-l.png";
     }
     
-    else if(lot_dist_name.equals("Lot R") || lot_dist_name.equals("Mason Pond Deck") || lot_dist_name.equals("Shenandoah Parking Deck")) {
+    else if(lot_dist_name.equals("Lot R") || lot_dist_name.equals("Mason Pond Deck") || lot_dist_name.equals("Shenandoah Deck")) {
       return "assets/mapOfFairfaxCampus-RMasonPondShenndoah-l.png";
     }
     else if(lot_dist_name.equals("West Campus Lot")) {
