@@ -19,7 +19,11 @@ public class DistanceFinderTests {
     //lots_to_engnr[6] = new Location("Mason Pond", new Coordinate(38.830631, -77.309557));
     
     DistanceFinder df_buch = new DistanceFinder(new Location("Buchanan Hall", new Coordinate(38.828826,-77.308485)),lots_to_buch);
-    LotDistance [] ld_to_buch = df_buch.sortByDistance();
+    LotDistance [] ld_to_buch = df_buch.sortByDistance(); 
+    
+    // For every test assert statements assure that the right lots are at index 0, 1, 2 of the LotDistance array (in this case only 2 lots so 0, 1 indexes are checked)
+    assert(ld_to_buch[0].getName().equals("Lot M"));
+    assert(ld_to_buch[1].getName().equals("Lot P"));
   } 
   
   // Finds and sorts distances between Taylor Hall and Lot K, Shenandoah Parking Deck, and Mason Pond Parking Deck (3 Lots)
@@ -34,7 +38,10 @@ public class DistanceFinderTests {
     lots_to_taylor[2] = new Location("Mason Pond", new Coordinate(38.830631, -77.309557));
     
     DistanceFinder df_taylor = new DistanceFinder(new Location("Taylor Hall", new Coordinate(38.827712,-77.301767)),lots_to_taylor);
-    LotDistance [] ld_to_taylor = df_taylor.sortByDistance();
+    LotDistance [] ld_to_taylor = df_taylor.sortByDistance(); 
+    assert(ld_to_taylor[0].getName().equals("Shenandoah"));
+    assert(ld_to_taylor[1].getName().equals("Mason Pond"));
+    assert(ld_to_taylor[2].getName().equals("Lot K"));
   }
   
   // Finds and sorts distances between Carow Hall and Shenandoah Parking Deck (1 lot)
@@ -50,6 +57,7 @@ public class DistanceFinderTests {
     
     DistanceFinder df_carow = new DistanceFinder(new Location("Carow Hall", new Coordinate(38.831475,-77.301275)),lots_to_carow);
     LotDistance [] ld_to_carow = df_carow.sortByDistance();
+    assert(ld_to_carow[0].getName().equals("Shenandoah"));
   } 
   
   // Finds and sorts distances between Johnson Center and all the valid lots for the General permit type
@@ -71,6 +79,9 @@ public class DistanceFinderTests {
     
     DistanceFinder df_JC = new DistanceFinder(new Location("JC", new Coordinate(38.827712,-77.301767)),lots_to_JC);
     LotDistance [] ld_to_JC = df_JC.sortByDistance();
+    assert(ld_to_JC[0].getName().equals("Shenandoah"));
+    assert(ld_to_JC[1].getName().equals("Lot C"));
+    assert(ld_to_JC[2].getName().equals("Lot A"));
   } 
   
   // Finds and sorts distances between David King Hall  and 8 Lots
@@ -90,6 +101,9 @@ public class DistanceFinderTests {
     
     DistanceFinder df_dk = new DistanceFinder(new Location("David King Hall", new Coordinate(38.830594,-77.306635)),lots_to_dk);
     LotDistance [] ld_to_dk = df_dk.sortByDistance(); 
+    assert(ld_to_dk[0].getName().equals("Shenandoah"));
+    assert(ld_to_dk[1].getName().equals("Mason Pond"));
+    assert(ld_to_dk[2].getName().equals("Lot R"));
   }
   
   // Finds and sorts distances between Lecture Hall and all the valid lots for the General Faculty/Staff Annual permit type
@@ -111,6 +125,9 @@ public class DistanceFinderTests {
     
     DistanceFinder df_lecture = new DistanceFinder(new Location("Lecture Hall", new Coordinate(38.833121,-77.307579)),lots_to_lecture);
     LotDistance [] ld_to_lecture = df_lecture.sortByDistance(); 
+    assert(ld_to_lecture[0].getName().equals("Rapphanock Deck"));
+    assert(ld_to_lecture[1].getName().equals("Lot I"));
+    assert(ld_to_lecture[2].getName().equals("Lot O"));
   }
   
   // Finds and sorts distances between Aquia Building and all the valid lots for the Mason Pond F/S Annual permit type
@@ -132,6 +149,9 @@ public class DistanceFinderTests {
     
     DistanceFinder df_aqui = new DistanceFinder(new Location("Aquia Building", new Coordinate(38.832053, -77.309502)),lots_to_aqui);
     LotDistance [] ld_to_aqui = df_aqui.sortByDistance(); 
+    assert(ld_to_aqui[0].getName().equals("Mason Pond"));
+    assert(ld_to_aqui[1].getName().equals("Lot I"));
+    assert(ld_to_aqui[2].getName().equals("Lot M"));
   } 
   
   // Finds and sorts distances between East Building and all the valid lots for the Shenandoah F/S Annual permit type
@@ -153,6 +173,9 @@ public class DistanceFinderTests {
     
     DistanceFinder df_east = new DistanceFinder(new Location("East Building", new Coordinate(38.832998,-77.308297)),lots_to_east);
     LotDistance [] ld_to_east = df_east.sortByDistance(); 
+    assert(ld_to_east[0].getName().equals("Rapphanock Deck"));
+    assert(ld_to_east[1].getName().equals("Lot I"));
+    assert(ld_to_east[2].getName().equals("Shenandoah"));
   } 
   
   // Finds and sorts distances between Fenwick Library and all the valid lots for the Rapphanock River Parking Deck (RRPD) F/S Annual permit type
@@ -174,6 +197,9 @@ public class DistanceFinderTests {
     
     DistanceFinder df_fenwick = new DistanceFinder(new Location("Fenwick Library", new Coordinate(38.830594,-77.306635)),lots_to_fenwick);
     LotDistance [] ld_to_fenwick = df_fenwick.sortByDistance(); 
+    assert(ld_to_fenwick[0].getName().equals("Lot A"));
+    assert(ld_to_fenwick[1].getName().equals("Rapphanock Deck"));
+    assert(ld_to_fenwick[2].getName().equals("Lot C"));
   }
   
   // Finds and sorts distances between Center for the Arts and all the valid lots for the RRPD Roof Only F/S Annual permit type
@@ -183,6 +209,7 @@ public class DistanceFinderTests {
     
     DistanceFinder df_ca = new DistanceFinder(new Location("Center for the Arts", new Coordinate(38.829516, -77.309348)),lots_to_ca);
     LotDistance [] ld_to_ca = df_ca.sortByDistance(); 
+    assert(ld_to_ca[0].getName().equals("Rapphanock Deck"));
   } 
   
   // Finds and sorts distances between Cross Cottage  and all the valid lots for the West Campus permit type
@@ -192,6 +219,7 @@ public class DistanceFinderTests {
     
     DistanceFinder df_cc = new DistanceFinder(new Location("Cross Cottage", new Coordinate(38.828752, -77.310916)),lots_to_cc);
     LotDistance [] ld_to_cc = df_cc.sortByDistance(); 
+    assert(ld_to_cc[0].getName().equals("West Campus Lot"));
   }  
   
   // Finds and sorts distances between Greenhouse and all the valid lots for the Lot M & P Permit type
@@ -203,6 +231,9 @@ public class DistanceFinderTests {
     
     DistanceFinder df_greenhouse = new DistanceFinder(new Location("Greenhouse", new Coordinate(38.828044,-77.301397)),lots_to_greenhouse);
     LotDistance [] ld_to_greenhouse = df_greenhouse.sortByDistance();
+    assert(ld_to_greenhouse[0].getName().equals("West Campus Lot"));
+    assert(ld_to_greenhouse[1].getName().equals("Lot M"));
+    assert(ld_to_greenhouse[2].getName().equals("Lot P"));
   } 
   // Finds and sorts distances between Exploratory Hall and all the valid lots for the Resident Student Annual Lite type
   @Test public void test_df13() {
@@ -215,6 +246,9 @@ public class DistanceFinderTests {
     
     DistanceFinder df_ex = new DistanceFinder(new Location("Exploratory", new Coordinate(38.829729,-77.305454)),lots_to_ex);
     LotDistance [] ld_to_ex = df_ex.sortByDistance();
+    assert(ld_to_ex[0].getName().equals("West Campus Lot"));
+    assert(ld_to_ex[1].getName().equals("Lot K"));
+    assert(ld_to_ex[2].getName().equals("Lot M"));
   } 
   
   // Finds and sorts distances between Innovation Hall and all the valid lots for the Mason Pond (Student Annual)permit type
@@ -228,6 +262,9 @@ public class DistanceFinderTests {
     
     DistanceFinder df_in = new DistanceFinder(new Location("Innovation", new Coordinate(38.828502,-77.307427)),lots_to_in);
     LotDistance [] ld_to_in = df_in.sortByDistance();
+    assert(ld_to_in[0].getName().equals("Mason Pond"));
+    assert(ld_to_in[1].getName().equals("West Campus Lot"));
+    assert(ld_to_in[2].getName().equals("Lot M"));
   } 
   
   // Finds and sorts distances between Finley Building  and all the valid lots for the Shenandoah Deck (Reserved Student) permit type
@@ -240,6 +277,9 @@ public class DistanceFinderTests {
     
     DistanceFinder df_fin = new DistanceFinder(new Location("Finley", new Coordinate(38.833025,-77.308967)),lots_to_fin);
     LotDistance [] ld_to_fin = df_fin.sortByDistance();
+    assert(ld_to_fin[0].getName().equals("West Campus Lot"));
+    assert(ld_to_fin[1].getName().equals("Lot O"));
+    assert(ld_to_fin[2].getName().equals("Shenandoah"));
   } 
   
   // Finds and sorts distances between Krasnow Institute and all the valid lots for the Rappahannock River Parking Deck permit type
@@ -253,6 +293,9 @@ public class DistanceFinderTests {
     
     DistanceFinder df_kr = new DistanceFinder(new Location("Krasnow", new Coordinate(38.831141,-77.300377)),lots_to_kr);
     LotDistance [] ld_to_kr = df_kr.sortByDistance();
+    assert(ld_to_kr[0].getName().equals("West Campus Lot"));
+    assert(ld_to_kr[1].getName().equals("Rapphanock Deck"));
+    assert(ld_to_kr[2].getName().equals("Lot O"));
   } 
   
   // Finds and sorts distances between Merten Hall  and all the valid lots for the Lot J Permit type
@@ -266,6 +309,9 @@ public class DistanceFinderTests {
     
     DistanceFinder df_mr = new DistanceFinder(new Location("Merten", new Coordinate(38.835009, -77.307841)),lots_to_mr);
     LotDistance [] ld_to_mr = df_mr.sortByDistance();
+    assert(ld_to_mr[0].getName().equals("West Campus Lot"));
+    assert(ld_to_mr[1].getName().equals("Lot O"));
+    assert(ld_to_mr[2].getName().equals("Lot M"));
   } 
   
   // Finds and sorts distances between Peterson Hall and all the valid lots for the Lot I Permit type
@@ -279,6 +325,9 @@ public class DistanceFinderTests {
     
     DistanceFinder df_pt = new DistanceFinder(new Location("Peterson", new Coordinate(38.834435, -77.309244 )),lots_to_pt);
     LotDistance [] ld_to_pt = df_pt.sortByDistance();
+    assert(ld_to_pt[0].getName().equals("Lot I"));
+    assert(ld_to_pt[1].getName().equals("West Campus Lot"));
+    assert(ld_to_pt[2].getName().equals("Lot O"));
   } 
   
   // Finds and sorts distances between Robinson Hall B and all the valid lots for the Lot R Permit type
@@ -292,6 +341,9 @@ public class DistanceFinderTests {
     
     DistanceFinder df_rb = new DistanceFinder(new Location("Robinson B", new Coordinate(38.830897,-77.308043)),lots_to_rb);
     LotDistance [] ld_to_rb = df_rb.sortByDistance();
+    assert(ld_to_rb[0].getName().equals("West Campus Lot"));
+    assert(ld_to_rb[1].getName().equals("Lot M"));
+    assert(ld_to_rb[2].getName().equals("Lot O"));
   }  
 }
     
