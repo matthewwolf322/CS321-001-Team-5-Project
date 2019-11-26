@@ -1,1 +1,3 @@
 JUnit Tests
+We organized these tests into the JUnit Tests folder. 
+They should run correctly when put in the CS321-001-Team-5-Project Directory
